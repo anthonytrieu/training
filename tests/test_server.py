@@ -107,6 +107,8 @@ EXPECTED_TOOLS = {
     "get_resting_heart_rate_history",
     "get_vo2_max",
     "get_current_ftp",
+    "get_weekly_training_summary",
+    "get_training_plan_context",
 }
 
 
@@ -117,6 +119,9 @@ def test_mcp_protocol_lists_all_tools(monkeypatch: pytest.MonkeyPatch) -> None:
         async with create_connected_server_and_client_session(server.mcp) as session:
             tools = await session.list_tools()
             assert {t.name for t in tools.tools} == EXPECTED_TOOLS
+
+            prompts = await session.list_prompts()
+            assert "plan_week" in {p.name for p in prompts.prompts}
 
             result = await session.call_tool("get_recent_activities", {"limit": 2})
             assert not result.isError
@@ -179,6 +184,53 @@ def test_invalid_date_raises_readable_error(monkeypatch: pytest.MonkeyPatch) -> 
     install_fake(monkeypatch, FakeGarminClient([]))
     with pytest.raises(RuntimeError, match="YYYY-MM-DD"):
         server.get_training_status("July 16th")
+
+
+def test_weekly_summary_covers_requested_weeks(monkeypatch: pytest.MonkeyPatch) -> None:
+    fake = FakeGarminClient([])
+    fake.canned["cycling_activities_by_date"] = load_fixture()
+    install_fake(monkeypatch, fake)
+
+    result = server.get_weekly_training_summary(weeks=2, end_date="2026-07-16")
+    assert result["range_start"] == "2026-07-06"  # Monday of the earlier week
+    assert result["range_end"] == "2026-07-16"
+    assert len(result["weeks"]) == 2
+    assert result["weeks"][0]["week_start"] == "2026-07-13"
+    assert "TSS is unavailable" in result["note"]
+
+
+def test_plan_context_bundles_all_sections(monkeypatch: pytest.MonkeyPatch) -> None:
+    fake = FakeGarminClient([])
+    fake.canned["cycling_ftp"] = load_json("cycling_ftp.json")
+    fake.canned["max_metrics"] = load_json("max_metrics.json")
+    fake.canned["training_status"] = load_json("training_status.json")
+    fake.canned["cycling_activities_by_date"] = load_fixture()
+    fake.canned["sleep_daily"] = load_json("sleep_data.json")
+    fake.canned["hrv_daily"] = load_json("hrv_data.json")
+    fake.canned["rhr_daily"] = load_json("rhr_day.json")
+    install_fake(monkeypatch, fake)
+
+    ctx = server.get_training_plan_context(wellness_days=2)
+
+    assert ctx["ftp"]["ftp_w"] == 290.0
+    assert ctx["vo2max"]["vo2max_cycling"] == 63.7
+    assert ctx["training_status"]["acwr_status"] == "OPTIMAL"
+    assert ctx["last_14_days"]["ride_count"] == 2
+    assert ctx["last_14_days"]["total_training_load"] == 173.4
+    assert len(ctx["recent_sleep"]) == 2
+    assert len(ctx["recent_hrv"]) == 2
+    assert len(ctx["recent_resting_hr"]) == 2
+    assert any("single-sided" in n for n in ctx["notes"])
+    assert any("subjective" in n.lower() for n in ctx["notes"])
+
+
+def test_plan_week_prompt_embeds_user_context() -> None:
+    text = server.plan_week(goal="raise FTP to 310 by October", days_available="Tue/Thu/Sat/Sun")
+    assert "raise FTP to 310" in text
+    assert "Tue/Thu/Sat/Sun" in text
+    assert "easier alternative" in text.lower()
+    assert "single-sided" in text
+    assert "Do not schedule or upload workouts" in text
 
 
 def test_history_days_clamped_to_max(monkeypatch: pytest.MonkeyPatch) -> None:

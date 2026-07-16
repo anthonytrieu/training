@@ -5,10 +5,16 @@ Personal cycling training assistant. A local, read-only Python MCP server that w
 analyze rides, recovery and training trends from Garmin Connect — combined with the
 official Strava MCP for Strava-side data.
 
-**Status: Milestone 3** — the local MCP server (`garmin-mcp`) exposes 15 read-only
-tools: recent rides, per-activity summaries/splits/zones/time-series, activity
-comparison, and recovery context (training status, readiness, HRV, sleep, resting HR,
-VO2 max, FTP). Garmin+Strava dedup arrives in Milestone 4.
+**Status: Milestone 5** — the local MCP server (`garmin-mcp`) exposes 17 read-only
+tools plus a `plan_week` planning prompt: recent rides, per-activity
+summaries/splits/zones/time-series, activity comparison, recovery context (training
+status, readiness, HRV, sleep, resting HR, VO2 max, FTP), weekly training summaries,
+and a one-call training-plan context bundle.
+
+Strava integration (originally Milestone 4) was deliberately skipped: all Strava rides
+originate from the same Garmin recordings, so it added dedup complexity without new
+data. It can be added later via the official Strava MCP if segment/PR analysis becomes
+interesting.
 
 ## Requirements
 
@@ -84,6 +90,17 @@ claude mcp add garmin -- /Users/anthonytrieu/Desktop/garmin/.venv/bin/garmin-mcp
 | `get_resting_heart_rate_history(days, end_date?)` | Daily resting HR (≤14 days) |
 | `get_vo2_max(date?)` | Cycling + generic VO2 max, fitness age |
 | `get_current_ftp()` | FTP in watts, date set, staleness |
+| `get_weekly_training_summary(weeks, end_date?)` | Per-ISO-week totals: rides, hours, distance, elevation, training load, hardest ride (≤12 weeks) |
+| `get_training_plan_context(wellness_days)` | One-call bundle for planning: FTP, VO2 max, training status, last 14 days of rides, recent sleep/HRV/resting HR |
+
+### Planning prompt
+
+`/mcp__garmin__plan_week` (in Claude Code) starts a guided 7-day plan: Claude pulls the
+context and weekly baseline, asks for anything Garmin can't know (subjective fatigue,
+available days, indoor/outdoor), then produces a day-by-day plan where every session
+has a purpose, duration, FTP-anchored intensity target, interval instructions, an
+easier alternative for poor-recovery mornings, and a rationale. Plans are chat-only —
+nothing is scheduled or uploaded to the device.
 
 ### Example questions
 

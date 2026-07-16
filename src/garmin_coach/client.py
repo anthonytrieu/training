@@ -86,6 +86,14 @@ class GarminClient:
             )
         return activities
 
+    def cycling_activities_by_date(self, start: str, end: str) -> list[dict[str, Any]]:
+        """All cycling activities between two YYYY-MM-DD dates (inclusive), newest first."""
+        with _mapped_errors():
+            return cast(
+                list[dict[str, Any]],
+                self._api.get_activities_by_date(start, end, activitytype="cycling"),
+            )
+
     # --- per-activity detail (all read-only) ---
 
     def activity_summary(self, activity_id: str) -> dict[str, Any]:

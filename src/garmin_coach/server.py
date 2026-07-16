@@ -19,6 +19,7 @@ from mcp.server.fastmcp import FastMCP
 
 from .client import GarminClient, GarminClientError, ReauthRequiredError
 from .normalize import (
+    build_weekly_summaries,
     compare_summaries,
     normalize_activity_summary,
     normalize_ftp,
@@ -36,6 +37,8 @@ from .normalize import (
 
 MAX_LIMIT = 50
 MAX_HISTORY_DAYS = 14
+MAX_SUMMARY_WEEKS = 12
+MAX_WELLNESS_DAYS = 7
 
 mcp = FastMCP(
     "garmin-coach",
@@ -302,6 +305,128 @@ def get_current_ftp() -> dict[str, Any]:
     intensity-based interpretation.
     """
     return normalize_ftp(_call(lambda c: c.cycling_ftp()))
+
+
+@mcp.tool()
+def get_weekly_training_summary(weeks: int = 4, end_date: str | None = None) -> dict[str, Any]:
+    """Get per-week training totals for the last `weeks` ISO weeks (Mon-Sun, 1-12,
+    default 4, newest first): ride count, duration, distance, elevation, summed
+    Garmin training load, and the hardest ride of each week. Use this as the
+    baseline when judging whether a ride was big or small for the user.
+    """
+    weeks = max(1, min(int(weeks), MAX_SUMMARY_WEEKS))
+    end = date.fromisoformat(_valid_date(end_date))
+    start = end - timedelta(days=end.weekday() + 7 * (weeks - 1))
+    raw = _call(lambda c: c.cycling_activities_by_date(start.isoformat(), end.isoformat()))
+    rides = normalize_ride_summaries(raw)
+    return {
+        "range_start": start.isoformat(),
+        "range_end": end.isoformat(),
+        "weeks": build_weekly_summaries(rides, start, end),
+        "note": (
+            "totals are summed locally from Garmin-recorded per-ride values; "
+            "weekly TSS is unavailable because Garmin's activity list omits per-ride TSS"
+        ),
+    }
+
+
+@mcp.tool()
+def get_training_plan_context(wellness_days: int = 3) -> dict[str, Any]:
+    """Get everything needed to build a 7-day training plan in one call: current FTP,
+    VO2 max, training status (acute/chronic load, ACWR, load balance), the last 14 days
+    of rides with totals, and recent sleep/HRV/resting-HR (`wellness_days` days, 1-7).
+    Ask the user for subjective fatigue, available days, and indoor/outdoor preference
+    separately — those are not in Garmin.
+    """
+    wellness_days = max(1, min(int(wellness_days), MAX_WELLNESS_DAYS))
+    today = date.today()
+    today_iso = today.isoformat()
+    start = (today - timedelta(days=13)).isoformat()
+
+    ftp = normalize_ftp(_call(lambda c: c.cycling_ftp()))
+    vo2 = normalize_vo2max(_call(lambda c: c.max_metrics(today_iso)), today_iso)
+    status = normalize_training_status(_call(lambda c: c.training_status(today_iso)), today_iso)
+    raw_rides = _call(lambda c: c.cycling_activities_by_date(start, today_iso))
+    rides = [r.to_dict() for r in normalize_ride_summaries(raw_rides)]
+
+    sleep: list[dict[str, Any]] = []
+    hrv: list[dict[str, Any]] = []
+    rhr: list[dict[str, Any]] = []
+    for cdate in _history_dates(wellness_days, today_iso):
+
+        def fetch_day(d: str = cdate) -> tuple[Any, Any, Any]:
+            return (
+                _call(lambda c: c.sleep_daily(d)),
+                _call(lambda c: c.hrv_daily(d)),
+                _call(lambda c: c.rhr_daily(d)),
+            )
+
+        raw_sleep, raw_hrv, raw_rhr = fetch_day()
+        if s := normalize_sleep_daily(raw_sleep, cdate):
+            sleep.append(s)
+        if h := normalize_hrv_daily(raw_hrv, cdate):
+            hrv.append(h)
+        if r := normalize_rhr_daily(raw_rhr, cdate):
+            rhr.append(r)
+
+    load_values = [r["training_load"] for r in rides if r["training_load"] is not None]
+    return {
+        "as_of": today_iso,
+        "ftp": ftp,
+        "vo2max": vo2,
+        "training_status": status,
+        "last_14_days": {
+            "ride_count": len(rides),
+            "total_training_load": round(sum(load_values), 1) if load_values else None,
+            "rides": rides,
+        },
+        "recent_sleep": sleep,
+        "recent_hrv": hrv,
+        "recent_resting_hr": rhr,
+        "notes": [
+            "training readiness and recovery time are unavailable (no Garmin watch)",
+            "power values come from a single-sided meter (left-leg doubled)",
+            "subjective fatigue, soreness, available days and indoor/outdoor "
+            "preference must come from the user",
+        ],
+    }
+
+
+@mcp.prompt(title="Build a 7-day cycling training plan")
+def plan_week(goal: str = "", days_available: str = "", constraints: str = "") -> str:
+    """Guide Claude through building an adaptive rolling 7-day cycling plan."""
+    user_context = ""
+    if goal:
+        user_context += f"\nStated goal: {goal}"
+    if days_available:
+        user_context += f"\nDays available to ride: {days_available}"
+    if constraints:
+        user_context += f"\nConstraints: {constraints}"
+    return f"""Build me a rolling 7-day cycling training plan.{user_context}
+
+Follow this process:
+1. Call get_training_plan_context and get_weekly_training_summary (4 weeks) first.
+2. If my goal, available days, indoor/outdoor preference, or subjective fatigue and
+   soreness are unknown, ask me before writing the plan.
+3. Judge my recovery from the data (sleep, HRV vs. weekly average, resting-HR trend,
+   ACWR, recent training load) and say explicitly which signals informed the plan.
+
+The plan must contain, for each day (including rest days):
+- Session purpose (e.g. threshold development, endurance, recovery)
+- Duration
+- Intensity target as watts (derived from my current FTP from get_current_ftp or the
+  context call), heart rate, or perceived effort - state which
+- Interval and recovery instructions where applicable
+- An easier alternative to use if my recovery indicators are poor that morning
+- One or two sentences on why this session, given my recent load and goals
+
+Rules:
+- Distinguish recorded facts, calculated values, and coaching interpretation.
+- Do not invent zone boundaries; use FTP-anchored ranges and label them as such.
+- My power meter is single-sided - never reference left/right balance.
+- If data is missing or conflicting, say so instead of guessing.
+- Do not diagnose medical conditions.
+- Do not schedule or upload workouts to my device; present the plan in chat only."""
 
 
 def main() -> None:

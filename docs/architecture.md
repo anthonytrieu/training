@@ -55,5 +55,17 @@ data access is split between the **official Strava MCP** (hosted, OAuth) and a
      `available: false` + explanation instead of estimates.
    - History tools (HRV/sleep/RHR) make one Garmin request per day; capped at
      14 days to respect rate limits.
-4. Combine Garmin + Strava without double-counting.
-5. Weekly summaries + adaptive rolling 7-day plan (no auto-scheduling to device).
+4. ⏭ Skipped (user decision, 2026-07-16): Strava adds no ride data beyond what the
+   Edge already records — every Strava activity is the synced Garmin ride. Skipping
+   removes the whole double-counting problem. Revisit only if Strava segment/PR
+   analysis (climbing) becomes interesting; the architecture still accommodates the
+   official Strava MCP alongside this server.
+5. ✅ Weekly summaries + planning support. `get_weekly_training_summary` aggregates
+   ISO weeks locally from one paginated Garmin request (weekly TSS impossible: the
+   activity list omits per-ride TSS; Garmin training load is the summable signal).
+   `get_training_plan_context` bundles FTP/VO2/status/14-day rides/wellness into one
+   call so planning doesn't need ten tool round-trips. The 7-day plan itself is
+   produced by Claude via the `plan_week` MCP prompt, which encodes the required
+   session structure (purpose, duration, FTP-anchored intensity, intervals, easier
+   alternative, rationale) and guardrails (no invented zones, no L/R power claims,
+   no medical diagnosis, no workout uploads).

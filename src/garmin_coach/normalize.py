@@ -7,7 +7,7 @@ None rather than guesses.
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime, timedelta
 from typing import Any
 
 from .models import SINGLE_SIDED_POWER_NOTE, SOURCE_GARMIN, RideSummary
@@ -408,6 +408,69 @@ def normalize_ftp(raw: dict[str, Any]) -> dict[str, Any]:
         "source": SOURCE_GARMIN,
         "power_note": SINGLE_SIDED_POWER_NOTE,
     }
+
+
+def build_weekly_summaries(
+    rides: list[RideSummary], start: date, end: date
+) -> list[dict[str, Any]]:
+    """Aggregate normalized rides into ISO weeks (Mon-Sun) covering start..end.
+
+    Totals use Garmin-recorded per-ride values; the aggregation itself is local.
+    Weekly TSS is not included because Garmin's activity list omits per-ride TSS —
+    training_load (Garmin's own load metric) is the summable intensity signal here.
+    """
+    weeks: dict[date, list[RideSummary]] = {}
+    monday = start - timedelta(days=start.weekday())
+    while monday <= end:
+        weeks[monday] = []
+        monday += timedelta(days=7)
+
+    for ride in rides:
+        stamp = ride.start_time_local or ride.start_time_utc
+        if not stamp:
+            continue
+        ride_date = date.fromisoformat(stamp[:10])
+        week_start = ride_date - timedelta(days=ride_date.weekday())
+        weeks.setdefault(week_start, []).append(ride)
+
+    def total(items: list[RideSummary], attr: str) -> float | None:
+        values = [v for r in items if (v := getattr(r, attr)) is not None]
+        return round(sum(values), 1) if values else None
+
+    summaries = []
+    for week_start in sorted(weeks, reverse=True):
+        items = weeks[week_start]
+        hardest = max(
+            (r for r in items if r.training_load is not None),
+            key=lambda r: r.training_load or 0,
+            default=None,
+        )
+        summaries.append(
+            {
+                "week_start": week_start.isoformat(),
+                "week_end": (week_start + timedelta(days=6)).isoformat(),
+                "ride_count": len(items),
+                "total_duration_h": round((total(items, "duration_s") or 0) / 3600, 1),
+                "total_moving_h": round((total(items, "moving_duration_s") or 0) / 3600, 1),
+                "total_distance_km": total(items, "distance_km"),
+                "total_elevation_gain_m": total(items, "elevation_gain_m"),
+                "total_training_load": total(items, "training_load"),
+                "hardest_ride": (
+                    {
+                        "activity_id": hardest.activity_id,
+                        "name": hardest.name,
+                        "date": (hardest.start_time_local or "")[:10] or None,
+                        "training_load": hardest.training_load,
+                        "normalized_power_w": hardest.normalized_power_w,
+                        "duration_s": hardest.duration_s,
+                    }
+                    if hardest
+                    else None
+                ),
+                "source": SOURCE_GARMIN,
+            }
+        )
+    return summaries
 
 
 _COMPARE_KEYS = [
