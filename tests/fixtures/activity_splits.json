@@ -1,0 +1,319 @@
+{
+ "activityId": 100000001,
+ "lapDTOs": [
+  {
+   "startTimeGMT": "2026-07-16T15:00:15.0",
+   "startLatitude": null,
+   "startLongitude": null,
+   "distance": 8046.72,
+   "duration": 1798.272,
+   "movingDuration": 1302.0,
+   "elapsedDuration": 1798.272,
+   "elevationGain": 50.0,
+   "elevationLoss": 74.0,
+   "maxElevation": 49.6,
+   "minElevation": 6.4,
+   "averageSpeed": 4.474999904632568,
+   "averageMovingSpeed": 6.180276662706414,
+   "maxSpeed": 10.880000114440916,
+   "calories": 156.0,
+   "bmrCalories": 45.0,
+   "averageHR": 121.0,
+   "maxHR": 157.0,
+   "averageBikeCadence": 68.0,
+   "maxBikeCadence": 159.0,
+   "averageTemperature": 23.0,
+   "maxTemperature": 26.0,
+   "minTemperature": 22.0,
+   "averagePower": 62.0,
+   "maxPower": 577.0,
+   "minPower": 0.0,
+   "normalizedPower": 107.0,
+   "totalWork": 26.014195636297682,
+   "totalNumberOfStrokes": 1246,
+   "endLatitude": null,
+   "endLongitude": null,
+   "maxVerticalSpeed": 0.4000005722045899,
+   "maxRespirationRate": 33.56999969482422,
+   "avgRespirationRate": 23.170000076293945,
+   "surfaceTypeUnpavedPercentage": 9.0,
+   "lapIndex": 1,
+   "messageIndex": 0
+  },
+  {
+   "startTimeGMT": "2026-07-16T15:30:14.0",
+   "startLatitude": null,
+   "startLongitude": null,
+   "distance": 8046.72,
+   "duration": 1195.962,
+   "movingDuration": 1093.0,
+   "elapsedDuration": 1198.333,
+   "elevationGain": 52.0,
+   "elevationLoss": 67.0,
+   "maxElevation": 32.6,
+   "minElevation": 5.0,
+   "averageSpeed": 6.728000164031982,
+   "averageMovingSpeed": 7.362049601869853,
+   "maxSpeed": 14.41600036621094,
+   "calories": 155.0,
+   "bmrCalories": 30.0,
+   "averageHR": 147.0,
+   "maxHR": 167.0,
+   "averageBikeCadence": 80.0,
+   "maxBikeCadence": 125.0,
+   "averageTemperature": 22.0,
+   "maxTemperature": 24.0,
+   "minTemperature": 21.0,
+   "averagePower": 104.0,
+   "maxPower": 723.0,
+   "minPower": 0.0,
+   "normalizedPower": 136.0,
+   "totalWork": 29.832793160891836,
+   "totalNumberOfStrokes": 1294,
+   "endLatitude": null,
+   "endLongitude": null,
+   "maxVerticalSpeed": 0.4000005722045899,
+   "maxRespirationRate": 36.40999984741211,
+   "avgRespirationRate": 29.790000915527344,
+   "surfaceTypeUnpavedPercentage": 1.0,
+   "lapIndex": 2,
+   "messageIndex": 1
+  },
+  {
+   "startTimeGMT": "2026-07-16T15:50:13.0",
+   "startLatitude": null,
+   "startLongitude": null,
+   "distance": 8046.72,
+   "duration": 1781.183,
+   "movingDuration": 1165.0,
+   "elapsedDuration": 1781.183,
+   "elevationGain": 106.0,
+   "elevationLoss": 80.0,
+   "maxElevation": 78.0,
+   "minElevation": 8.0,
+   "averageSpeed": 4.51800012588501,
+   "averageMovingSpeed": 6.907055978406653,
+   "maxSpeed": 18.55900001525879,
+   "calories": 190.0,
+   "bmrCalories": 44.0,
+   "averageHR": 138.0,
+   "maxHR": 181.0,
+   "averageBikeCadence": 69.0,
+   "maxBikeCadence": 149.0,
+   "averageTemperature": 21.0,
+   "maxTemperature": 23.0,
+   "minTemperature": 21.0,
+   "averagePower": 96.0,
+   "maxPower": 669.0,
+   "minPower": 0.0,
+   "normalizedPower": 168.0,
+   "totalWork": 32.69674130433745,
+   "totalNumberOfStrokes": 1147,
+   "endLatitude": null,
+   "endLongitude": null,
+   "maxVerticalSpeed": 0.6000022888183594,
+   "maxRespirationRate": 40.900001525878906,
+   "avgRespirationRate": 27.690000534057617,
+   "surfaceTypeUnpavedPercentage": 5.0,
+   "lapIndex": 3,
+   "messageIndex": 2
+  },
+  {
+   "startTimeGMT": "2026-07-16T16:19:54.0",
+   "startLatitude": null,
+   "startLongitude": null,
+   "distance": 8046.72,
+   "duration": 3199.877,
+   "movingDuration": 1402.0,
+   "elapsedDuration": 3199.877,
+   "elevationGain": 52.0,
+   "elevationLoss": 77.0,
+   "maxElevation": 38.4,
+   "minElevation": 7.8,
+   "averageSpeed": 2.515000104904175,
+   "averageMovingSpeed": 5.7394580705019616,
+   "maxSpeed": 11.682000160217285,
+   "calories": 199.0,
+   "bmrCalories": 80.0,
+   "averageHR": 110.0,
+   "maxHR": 155.0,
+   "averageBikeCadence": 68.0,
+   "maxBikeCadence": 173.0,
+   "averageTemperature": 26.0,
+   "maxTemperature": 28.0,
+   "minTemperature": 23.0,
+   "averagePower": 50.0,
+   "maxPower": 860.0,
+   "minPower": 0.0,
+   "normalizedPower": 114.0,
+   "totalWork": 25.059546255149144,
+   "totalNumberOfStrokes": 1099,
+   "endLatitude": null,
+   "endLongitude": null,
+   "maxVerticalSpeed": 0.6000003814697266,
+   "maxRespirationRate": 35.0099983215332,
+   "avgRespirationRate": 21.489999771118164,
+   "surfaceTypeUnpavedPercentage": 14.0,
+   "lapIndex": 4,
+   "messageIndex": 3
+  },
+  {
+   "startTimeGMT": "2026-07-16T17:13:14.0",
+   "startLatitude": null,
+   "startLongitude": null,
+   "distance": 2080.99,
+   "duration": 476.301,
+   "movingDuration": 427.0,
+   "elapsedDuration": 476.301,
+   "elevationGain": 44.0,
+   "elevationLoss": 4.0,
+   "maxElevation": 49.6,
+   "minElevation": 9.4,
+   "averageSpeed": 4.36899995803833,
+   "averageMovingSpeed": 4.873512857691745,
+   "maxSpeed": 7.790999889373779,
+   "calories": 66.0,
+   "bmrCalories": 12.0,
+   "averageHR": 148.0,
+   "maxHR": 168.0,
+   "averageBikeCadence": 64.0,
+   "maxBikeCadence": 115.0,
+   "averageTemperature": 27.0,
+   "maxTemperature": 27.0,
+   "minTemperature": 26.0,
+   "averagePower": 114.0,
+   "maxPower": 618.0,
+   "minPower": 0.0,
+   "normalizedPower": 186.0,
+   "totalWork": 12.887766645505273,
+   "totalNumberOfStrokes": 394,
+   "endLatitude": null,
+   "endLongitude": null,
+   "maxVerticalSpeed": 0.8000011444091798,
+   "maxRespirationRate": 36.939998626708984,
+   "avgRespirationRate": 29.780000686645508,
+   "surfaceTypeUnpavedPercentage": 19.0,
+   "lapIndex": 5,
+   "messageIndex": 4
+  }
+ ],
+ "eventDTOs": [
+  {
+   "startTimeGMT": "2026-07-16T15:00:14.0",
+   "startTimeGMTDoubleValue": 1784214014000.0,
+   "sectionTypeDTO": {
+    "id": 4,
+    "key": "timerTrigger",
+    "sectionTypeKey": "TIMER_TRIGGER"
+   }
+  },
+  {
+   "startTimeGMT": "2026-07-16T15:00:14.0",
+   "startTimeGMTDoubleValue": 1784214014000.0,
+   "sectionTypeDTO": {
+    "id": 22,
+    "key": "offCourse",
+    "sectionTypeKey": "OFF_COURSE"
+   }
+  },
+  {
+   "startTimeGMT": "2026-07-16T15:00:15.0",
+   "startTimeGMTDoubleValue": 1784214015000.0,
+   "sectionTypeDTO": {
+    "id": 4,
+    "key": "timerTrigger",
+    "sectionTypeKey": "TIMER_TRIGGER"
+   }
+  },
+  {
+   "startTimeGMT": "2026-07-16T15:09:39.0",
+   "startTimeGMTDoubleValue": 1784214579000.0,
+   "sectionTypeDTO": {
+    "id": 22,
+    "key": "offCourse",
+    "sectionTypeKey": "OFF_COURSE"
+   }
+  },
+  {
+   "startTimeGMT": "2026-07-16T15:24:53.0",
+   "startTimeGMTDoubleValue": 1784215493000.0,
+   "sectionTypeDTO": {
+    "id": 22,
+    "key": "offCourse",
+    "sectionTypeKey": "OFF_COURSE"
+   }
+  },
+  {
+   "startTimeGMT": "2026-07-16T15:26:23.0",
+   "startTimeGMTDoubleValue": 1784215583000.0,
+   "sectionTypeDTO": {
+    "id": 22,
+    "key": "offCourse",
+    "sectionTypeKey": "OFF_COURSE"
+   }
+  },
+  {
+   "startTimeGMT": "2026-07-16T15:35:32.0",
+   "startTimeGMTDoubleValue": 1784216132000.0,
+   "sectionTypeDTO": {
+    "id": 4,
+    "key": "timerTrigger",
+    "sectionTypeKey": "TIMER_TRIGGER"
+   }
+  },
+  {
+   "startTimeGMT": "2026-07-16T15:35:33.0",
+   "startTimeGMTDoubleValue": 1784216133000.0,
+   "sectionTypeDTO": {
+    "id": 4,
+    "key": "timerTrigger",
+    "sectionTypeKey": "TIMER_TRIGGER"
+   }
+  },
+  {
+   "startTimeGMT": "2026-07-16T15:39:05.0",
+   "startTimeGMTDoubleValue": 1784216345000.0,
+   "sectionTypeDTO": {
+    "id": 4,
+    "key": "timerTrigger",
+    "sectionTypeKey": "TIMER_TRIGGER"
+   }
+  },
+  {
+   "startTimeGMT": "2026-07-16T15:39:07.0",
+   "startTimeGMTDoubleValue": 1784216347000.0,
+   "sectionTypeDTO": {
+    "id": 4,
+    "key": "timerTrigger",
+    "sectionTypeKey": "TIMER_TRIGGER"
+   }
+  },
+  {
+   "startTimeGMT": "2026-07-16T17:00:21.0",
+   "startTimeGMTDoubleValue": 1784221221000.0,
+   "sectionTypeDTO": {
+    "id": 22,
+    "key": "offCourse",
+    "sectionTypeKey": "OFF_COURSE"
+   }
+  },
+  {
+   "startTimeGMT": "2026-07-16T17:00:58.0",
+   "startTimeGMTDoubleValue": 1784221258000.0,
+   "sectionTypeDTO": {
+    "id": 22,
+    "key": "offCourse",
+    "sectionTypeKey": "OFF_COURSE"
+   }
+  },
+  {
+   "startTimeGMT": "2026-07-16T17:21:09.0",
+   "startTimeGMTDoubleValue": 1784222469000.0,
+   "sectionTypeDTO": {
+    "id": 4,
+    "key": "timerTrigger",
+    "sectionTypeKey": "TIMER_TRIGGER"
+   }
+  }
+ ]
+}

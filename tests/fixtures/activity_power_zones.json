@@ -1,0 +1,37 @@
+[
+ {
+  "zoneNumber": 1,
+  "secsInZone": 5637.084,
+  "zoneLowBoundary": 0
+ },
+ {
+  "zoneNumber": 2,
+  "secsInZone": 599.015,
+  "zoneLowBoundary": 159
+ },
+ {
+  "zoneNumber": 3,
+  "secsInZone": 249.979,
+  "zoneLowBoundary": 218
+ },
+ {
+  "zoneNumber": 4,
+  "secsInZone": 176.015,
+  "zoneLowBoundary": 261
+ },
+ {
+  "zoneNumber": 5,
+  "secsInZone": 81.008,
+  "zoneLowBoundary": 305
+ },
+ {
+  "zoneNumber": 6,
+  "secsInZone": 104.998,
+  "zoneLowBoundary": 349
+ },
+ {
+  "zoneNumber": 7,
+  "secsInZone": 101.001,
+  "zoneLowBoundary": 435
+ }
+]
