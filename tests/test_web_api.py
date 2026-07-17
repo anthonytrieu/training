@@ -69,6 +69,16 @@ def test_status_endpoint_bundles_metrics(web: TestClient, monkeypatch: pytest.Mo
     assert body["training_status"]["acwr_status"] == "OPTIMAL"
 
 
+def test_courses_endpoint(web: TestClient, monkeypatch: pytest.MonkeyPatch):
+    fake = FakeGarminClient([])
+    fake.canned["courses"] = load("courses.json")
+    install_fake(monkeypatch, fake)
+    resp = web.get("/api/courses")
+    assert resp.status_code == 200
+    names = [c["name"] for c in resp.json()]
+    assert "Afternoon Ride" in names
+
+
 def test_plan_endpoint_serves_markdown(web: TestClient):
     resp = web.get("/api/plan")
     assert resp.status_code == 200

@@ -94,6 +94,12 @@ class GarminClient:
                 self._api.get_activities_by_date(start, end, activitytype="cycling"),
             )
 
+    def courses(self) -> list[dict[str, Any]]:
+        """All saved courses. The library has no course methods, so this uses the
+        generic authenticated passthrough against Garmin's course service."""
+        with _mapped_errors():
+            return cast(list[dict[str, Any]], self._api.connectapi("/course-service/course"))
+
     # --- per-activity detail (all read-only) ---
 
     def activity_summary(self, activity_id: str) -> dict[str, Any]:

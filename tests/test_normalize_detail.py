@@ -153,6 +153,20 @@ def test_ftp() -> None:
     assert "single-sided" in f["power_note"]
 
 
+def test_courses_normalized_longest_first() -> None:
+    from garmin_coach.normalize import normalize_courses
+
+    courses = normalize_courses(load("courses.json"))
+    assert len(courses) == 3
+    assert courses[0]["distance_km"] >= courses[-1]["distance_km"]
+    ride = next(c for c in courses if c["name"] == "Afternoon Ride")
+    assert ride["course_id"] == 900000001
+    assert ride["distance_km"] == 40.8
+    assert ride["elevation_gain_m"] == 366.0
+    assert ride["activity_type"] == "road_biking"
+    assert ride["source"] == "garmin"
+
+
 def test_compare_summaries_deltas() -> None:
     s = normalize_activity_summary(load("activity_summary.json"))
     shorter = dict(s, distance_km=20.0, avg_power_w=100.0, avg_hr_bpm=None)

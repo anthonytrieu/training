@@ -1,0 +1,35 @@
+[
+ {
+  "courseName": "Afternoon Ride",
+  "distanceInMeters": 40835.62,
+  "elevationGainInMeters": 365.96,
+  "elevationLossInMeters": 366.12,
+  "activityType": {
+   "typeId": 10,
+   "typeKey": "road_biking"
+  },
+  "courseId": 900000001
+ },
+ {
+  "courseName": "Vancouver Cycling 49.61 km - Jul 12",
+  "distanceInMeters": 49612.97,
+  "elevationGainInMeters": 1222.64,
+  "elevationLossInMeters": 1211.87,
+  "activityType": {
+   "typeId": 10,
+   "typeKey": "road_biking"
+  },
+  "courseId": 900000002
+ },
+ {
+  "courseName": "to stanley",
+  "distanceInMeters": 10898.15,
+  "elevationGainInMeters": 176.86,
+  "elevationLossInMeters": 154.3,
+  "activityType": {
+   "typeId": 10,
+   "typeKey": "road_biking"
+  },
+  "courseId": 900000003
+ }
+]

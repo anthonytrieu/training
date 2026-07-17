@@ -22,6 +22,7 @@ from .normalize import (
     build_weekly_summaries,
     compare_summaries,
     normalize_activity_summary,
+    normalize_courses,
     normalize_fitness_age,
     normalize_ftp,
     normalize_hrv_daily,
@@ -444,6 +445,16 @@ Rules:
 - If data is missing or conflicting, say so instead of guessing.
 - Do not diagnose medical conditions.
 - Do not schedule or upload workouts to my device; present the plan in chat only."""
+
+
+@mcp.tool()
+def get_courses() -> list[dict[str, Any]]:
+    """Get the user's saved Garmin courses (routes) with distance and climbing, longest
+    first. Use when the user asks about fueling, pacing, or planning a named route —
+    estimate ride duration from distance, elevation gain, and the user's demonstrated
+    speeds, and state the estimate as an assumption.
+    """
+    return normalize_courses(_call(lambda c: c.courses()))
 
 
 def main() -> None:

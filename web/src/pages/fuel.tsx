@@ -24,6 +24,7 @@ import {
 import {
   PRODUCTS,
   computePlan,
+  estimateDurationMin,
   estimateSweatRate,
   fmtClock,
   planSummaryForCoach,
@@ -31,6 +32,7 @@ import {
   type FuelingInputs,
   type Intensity,
 } from "@/lib/fueling"
+import { api, type Course } from "@/lib/api"
 import { fmtNum } from "@/lib/format"
 
 const STORAGE_KEY = "garmin-coach-fuel-plans"
@@ -41,8 +43,8 @@ const DEFAULTS: FuelingInputs = {
   carbs_per_h: recommendedCarbsPerHour(180, "tempo"),
   sweat_rate_l_h: 1.0,
   sodium_loss_mg_l: 950,
-  drink_id: "maurten160",
-  solid_id: "maurtengel",
+  drink_id: "water",
+  solid_id: "syrup",
   interval_min: 20,
   custom_products: [],
 }
@@ -75,6 +77,27 @@ export default function Fuel() {
   const [carbsTouched, setCarbsTouched] = useState(false)
   const [saved, setSaved] = useState<SavedPlan[]>(loadSaved)
   const [planName, setPlanName] = useState("")
+  const [courses, setCourses] = useState<Course[]>([])
+  const [courseId, setCourseId] = useState<string>("manual")
+  const [durationTouched, setDurationTouched] = useState(false)
+
+  useEffect(() => {
+    api.courses().then(setCourses, () => setCourses([]))
+  }, [])
+
+  const course = courses.find((c) => String(c.course_id) === courseId)
+
+  // Re-estimate duration from the selected course until the user edits it by hand.
+  useEffect(() => {
+    if (course && !durationTouched && course.distance_km != null) {
+      set("duration_min", estimateDurationMin(
+        course.distance_km,
+        course.elevation_gain_m ?? 0,
+        inputs.intensity,
+      ))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseId, inputs.intensity, durationTouched, courses.length])
 
   const set = <K extends keyof FuelingInputs>(key: K, value: FuelingInputs[K]) =>
     setInputs((s) => ({ ...s, [key]: value }))
@@ -116,6 +139,8 @@ export default function Fuel() {
           size="sm"
           onClick={() => {
             setCarbsTouched(true)
+            setCourseId("manual")
+            setDurationTouched(true)
             setInputs((s) => ({ ...s, ...WHISTLER }))
           }}
         >
@@ -131,6 +156,40 @@ export default function Fuel() {
               <CardTitle className="text-sm">Ride</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-5">
+              <div>
+                <Label className="mb-1.5 text-xs">Garmin course</Label>
+                <Select
+                  value={courseId}
+                  onValueChange={(v) => {
+                    if (v == null) return
+                    setCourseId(v)
+                    setDurationTouched(false)
+                  }}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue>
+                      {course
+                        ? `${course.name} (${fmtNum(course.distance_km, 1)} km · +${fmtNum(course.elevation_gain_m)} m)`
+                        : "Manual entry"}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="manual">Manual entry</SelectItem>
+                    {courses.map((c) => (
+                      <SelectItem key={c.course_id} value={String(c.course_id)}>
+                        {c.name} ({fmtNum(c.distance_km, 1)} km · +{fmtNum(c.elevation_gain_m)} m)
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {course && (
+                  <p className="mt-1.5 text-xs text-muted-foreground">
+                    {durationTouched
+                      ? "Duration set manually."
+                      : `Estimated ${fmtClock(inputs.duration_min)} at ${inputs.intensity} pace from distance + climbing — adjust below if you know better.`}
+                  </p>
+                )}
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label className="mb-1.5 text-xs">Hours</Label>
@@ -139,9 +198,10 @@ export default function Fuel() {
                     min={0}
                     max={12}
                     value={hours}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      setDurationTouched(true)
                       set("duration_min", Math.max(20, Number(e.target.value) * 60 + mins))
-                    }
+                    }}
                   />
                 </div>
                 <div>
@@ -152,9 +212,10 @@ export default function Fuel() {
                     max={59}
                     step={5}
                     value={mins}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      setDurationTouched(true)
                       set("duration_min", Math.max(20, hours * 60 + Number(e.target.value)))
-                    }
+                    }}
                   />
                 </div>
               </div>

@@ -29,6 +29,19 @@ export interface Product {
 
 // Nutrition values are approximate, from public product pages.
 export const PRODUCTS: Product[] = [
+  { id: "water", name: "Plain water", kind: "drink", carbs_g: 0, sodium_mg: 0, serving: "500 ml bottle", fluid_ml: 500, dual_source: false, est_cost_usd: 0 },
+  {
+    id: "syrupmix",
+    name: "Maple syrup bottle mix",
+    kind: "drink",
+    carbs_g: 53,
+    sodium_mg: 5,
+    serving: "500 ml bottle (60 ml syrup + water)",
+    fluid_ml: 500,
+    ratio: "~1:1",
+    dual_source: true,
+    est_cost_usd: 1.2,
+  },
   { id: "maurten160", name: "Maurten Drink Mix 160", kind: "drink", carbs_g: 40, sodium_mg: 160, serving: "500 ml bottle", fluid_ml: 500, ratio: "1:0.8", dual_source: true, est_cost_usd: 3.5 },
   { id: "maurten320", name: "Maurten Drink Mix 320", kind: "drink", carbs_g: 80, sodium_mg: 200, serving: "500 ml bottle", fluid_ml: 500, ratio: "1:0.8", dual_source: true, est_cost_usd: 5.5 },
   { id: "betafuel80", name: "SiS Beta Fuel 80", kind: "drink", carbs_g: 80, sodium_mg: 220, serving: "500 ml bottle", fluid_ml: 500, ratio: "1:0.8", dual_source: true, est_cost_usd: 4.0 },
@@ -44,6 +57,18 @@ export const PRODUCTS: Product[] = [
     ratio: "2:1",
     dual_source: true,
     est_cost_usd: 0.7,
+  },
+  {
+    id: "syrup",
+    name: "maple syrup",
+    kind: "gel",
+    carbs_g: 27,
+    sodium_mg: 2,
+    serving: "1 shot (30 ml, from a soft flask)",
+    fluid_ml: 0,
+    ratio: "~1:1",
+    dual_source: true,
+    est_cost_usd: 0.6,
   },
   { id: "maurtengel", name: "Maurten Gel 100", kind: "gel", carbs_g: 25, sodium_mg: 20, serving: "1 gel", fluid_ml: 0, ratio: "1:0.8", dual_source: true, est_cost_usd: 4.0 },
   { id: "betafuelgel", name: "SiS Beta Fuel Gel", kind: "gel", carbs_g: 40, sodium_mg: 10, serving: "1 gel", fluid_ml: 0, ratio: "1:0.8", dual_source: true, est_cost_usd: 3.0 },
@@ -100,6 +125,19 @@ export function recommendedCarbsPerHour(duration_min: number, intensity: Intensi
   if (intensity === "race") base += 15
   if (intensity === "endurance") base -= 10
   return Math.max(20, Math.min(120, Math.round(base / 5) * 5))
+}
+
+/** Transparent, editable duration estimate for a course:
+ *  flat time at an intensity-typical speed + extra time per metre climbed. */
+export function estimateDurationMin(
+  distance_km: number,
+  climb_m: number,
+  intensity: Intensity,
+): number {
+  const flatSpeed = { endurance: 24, tempo: 27, race: 30 }[intensity] // km/h
+  const climbRate = { endurance: 1300, tempo: 1500, race: 1700 }[intensity] // extra m/h
+  const hours = distance_km / flatSpeed + climb_m / climbRate
+  return Math.max(20, Math.round((hours * 60) / 5) * 5)
 }
 
 export function estimateSweatRate(temp: "cool" | "mild" | "warm" | "hot", intensity: Intensity): number {
@@ -238,7 +276,7 @@ export function computePlan(inputs: FuelingInputs): FuelingPlan {
   if (sodiumShortfall > 500) {
     warnings.push({
       level: "info",
-      text: `Sodium is ~${Math.round(sodiumShortfall)} mg short of estimated losses (${targetSodium} mg). For rides over ~3 h in heat, consider electrolyte capsules or a saltier mix.`,
+      text: `Sodium is ~${Math.round(sodiumShortfall)} mg short of estimated losses (${targetSodium} mg). A pinch of table salt (~1/8 tsp) per bottle adds ~300 mg; for long hot rides consider electrolyte capsules.`,
     })
   }
   if (drinkConcentration > 0.12) {

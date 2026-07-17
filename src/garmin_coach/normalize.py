@@ -505,6 +505,28 @@ def build_weekly_summaries(
     return summaries
 
 
+def normalize_courses(raw: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Saved Garmin courses, longest first."""
+    courses = []
+    for c in raw:
+        distance_m = _num(c, "distanceInMeters")
+        activity_type = c.get("activityType") or {}
+        courses.append(
+            {
+                "course_id": c.get("courseId"),
+                "name": c.get("courseName") or "Unnamed course",
+                "activity_type": (
+                    activity_type.get("typeKey") if isinstance(activity_type, dict) else None
+                ),
+                "distance_km": _round(None if distance_m is None else distance_m / 1000, 1),
+                "elevation_gain_m": _round(_num(c, "elevationGainInMeters"), 0),
+                "elevation_loss_m": _round(_num(c, "elevationLossInMeters"), 0),
+                "source": SOURCE_GARMIN,
+            }
+        )
+    return sorted(courses, key=lambda c: c["distance_km"] or 0, reverse=True)
+
+
 _COMPARE_KEYS = [
     "duration_s",
     "moving_duration_s",

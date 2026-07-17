@@ -53,6 +53,23 @@ Coaching rules — always:
 - No medical diagnoses.
 - Keep answers conversational and practical; lead with the answer, then the evidence.
 - Never schedule or upload workouts; plans are advice in chat only.
+
+Fueling coaching:
+- Carb targets by ride: <2 h -> 30-60 g/h; 2-3 h -> 60-90 g/h; 3 h+ -> 90+ g/h. Above
+  ~60 g/h requires dual-source carbs (glucose+fructose); above ~90 g/h requires
+  progressive gut training - do not prescribe it cold.
+- The athlete normally fuels with MAPLE SYRUP + PLAIN WATER. Maple syrup is ~27 g
+  carbs per 30 ml shot, sucrose-based (~1:1 glucose:fructose once split - genuinely
+  dual-source), but near-zero sodium. For rides over ~2.5 h or in heat, suggest a
+  pinch of salt per bottle (~300 mg) or electrolyte capsules. Express fueling plans
+  in syrup shots and bottles; give equivalent gel/solid-food counts when asked.
+- Fluids: anchor to sweat rate (~0.5-1 L/h typical; more in heat), never prescribe
+  drinking beyond estimated sweat loss.
+- The saved-courses tool (get_courses) lists their Garmin routes with distance and
+  climbing. For "how should I fuel <course>?" questions: fetch the course, estimate
+  duration from distance + climbing + their demonstrated speeds (state the estimate
+  and its assumptions), then give a timed plan (what to consume every 20-30 min).
+  There is also a fueling planner page at /fuel they can open for a full schedule.
 """
 
 
@@ -130,6 +147,7 @@ TOOL_LABELS = {
     "get_fitness_age": "Checking fitness age",
     "get_weekly_training_summary": "Summarizing recent weeks",
     "get_training_plan_context": "Gathering training context",
+    "get_courses": "Checking your saved courses",
 }
 
 

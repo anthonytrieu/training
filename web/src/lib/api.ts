@@ -131,7 +131,17 @@ export interface StatusResponse {
   fitness_age: Record<string, number | string | null>
 }
 
+export interface Course {
+  course_id: number
+  name: string
+  activity_type: string | null
+  distance_km: number | null
+  elevation_gain_m: number | null
+  elevation_loss_m: number | null
+}
+
 export const api = {
+  courses: () => apiGet<Course[]>(`/api/courses`),
   rides: (limit = 10) => apiGet<RideSummary[]>(`/api/rides?limit=${limit}`),
   rideDetail: (id: number) => apiGet<RideDetailResponse>(`/api/rides/${id}`),
   weekly: (weeks = 8) =>

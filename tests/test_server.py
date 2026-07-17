@@ -110,6 +110,7 @@ EXPECTED_TOOLS = {
     "get_current_ftp",
     "get_weekly_training_summary",
     "get_training_plan_context",
+    "get_courses",
 }
 
 

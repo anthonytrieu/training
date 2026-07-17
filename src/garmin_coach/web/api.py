@@ -73,6 +73,11 @@ def status() -> dict[str, Any]:
     }
 
 
+@router.get("/courses")
+def courses() -> list[dict[str, Any]]:
+    return _call_tool(server.get_courses)  # type: ignore[no-any-return]
+
+
 @router.get("/plan")
 def plan() -> dict[str, Any]:
     plans = sorted(PLAN_DIR.glob("*.md")) if PLAN_DIR.exists() else []
