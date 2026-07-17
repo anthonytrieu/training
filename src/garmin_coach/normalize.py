@@ -217,9 +217,7 @@ _SERIES_METRICS = {
 def normalize_time_series(raw: dict[str, Any]) -> dict[str, Any]:
     """Downsampled per-second streams from Garmin's activity details response."""
     descriptors = raw.get("metricDescriptors") or []
-    index_of = {
-        d["key"]: d["metricsIndex"] for d in descriptors if d.get("key") in _SERIES_METRICS
-    }
+    index_of = {d["key"]: d["metricsIndex"] for d in descriptors if d.get("key") in _SERIES_METRICS}
     points = []
     for row in raw.get("activityDetailMetrics") or []:
         metrics = row.get("metrics") or []
@@ -383,8 +381,8 @@ def normalize_rhr_daily(raw: dict[str, Any], cdate: str) -> dict[str, Any] | Non
 
 def normalize_vo2max(raw: list[dict[str, Any]] | dict[str, Any], cdate: str) -> dict[str, Any]:
     """VO2 max from the max-metrics endpoint (cycling-specific when present)."""
-    item: dict[str, Any] = raw[0] if isinstance(raw, list) and raw else (
-        raw if isinstance(raw, dict) else {}
+    item: dict[str, Any] = (
+        raw[0] if isinstance(raw, list) and raw else (raw if isinstance(raw, dict) else {})
     )
     cycling = item.get("cycling") or {}
     generic = item.get("generic") or {}
@@ -395,6 +393,40 @@ def normalize_vo2max(raw: list[dict[str, Any]] | dict[str, Any], cdate: str) -> 
         "vo2max_generic": _num(generic, "vo2MaxPreciseValue") or _num(generic, "vo2MaxValue"),
         "fitness_age": _num(generic, "fitnessAge"),
         "source": SOURCE_GARMIN,
+    }
+
+
+def normalize_fitness_age(raw: dict[str, Any], cdate: str) -> dict[str, Any]:
+    """Fitness age from the dedicated fitness-age endpoint (what the Connect app
+    shows). Not the VO2-max-derived fitnessAge in max-metrics — the two can differ.
+    """
+    components = raw.get("components") or {}
+
+    def component(key: str) -> dict[str, Any] | None:
+        entry = components.get(key)
+        if not isinstance(entry, dict):
+            return None
+        return {"value": _num(entry, "value"), "target": _num(entry, "targetValue")}
+
+    return {
+        "date": cdate,
+        "fitness_age": _num(raw, "fitnessAge"),
+        "chronological_age": _num(raw, "chronologicalAge"),
+        "achievable_fitness_age": _num(raw, "achievableFitnessAge"),
+        "previous_fitness_age": _num(raw, "previousFitnessAge"),
+        "components": {
+            "vigorous_days_per_week": component("vigorousDaysAvg"),
+            "vigorous_minutes_per_week": component("vigorousMinutesAvg"),
+            "resting_hr_bpm": component("rhr"),
+            "bmi": component("bmi"),
+        },
+        "last_updated": _iso(raw.get("lastUpdated")),
+        "source": SOURCE_GARMIN,
+        "note": (
+            "this is the fitness age the Garmin Connect app displays, computed from "
+            "activity, resting HR and BMI; get_vo2_max's fitness_age is a separate "
+            "VO2-max-only estimate and may differ"
+        ),
     }
 
 

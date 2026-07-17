@@ -22,6 +22,7 @@ from .normalize import (
     build_weekly_summaries,
     compare_summaries,
     normalize_activity_summary,
+    normalize_fitness_age,
     normalize_ftp,
     normalize_hrv_daily,
     normalize_laps,
@@ -236,6 +237,7 @@ def get_hrv_history(days: int = 7, end_date: str | None = None) -> dict[str, Any
     entries: list[dict[str, Any]] = []
     missing: list[str] = []
     for cdate in _history_dates(days, end_date):
+
         def fetch(d: str = cdate) -> dict[str, Any] | None:
             return _call(lambda c: c.hrv_daily(d))
 
@@ -257,6 +259,7 @@ def get_sleep_history(days: int = 7, end_date: str | None = None) -> dict[str, A
     entries: list[dict[str, Any]] = []
     missing: list[str] = []
     for cdate in _history_dates(days, end_date):
+
         def fetch(d: str = cdate) -> dict[str, Any]:
             return _call(lambda c: c.sleep_daily(d))
 
@@ -277,6 +280,7 @@ def get_resting_heart_rate_history(days: int = 7, end_date: str | None = None) -
     entries: list[dict[str, Any]] = []
     missing: list[str] = []
     for cdate in _history_dates(days, end_date):
+
         def fetch(d: str = cdate) -> dict[str, Any]:
             return _call(lambda c: c.rhr_daily(d))
 
@@ -292,10 +296,23 @@ def get_resting_heart_rate_history(days: int = 7, end_date: str | None = None) -
 @mcp.tool()
 def get_vo2_max(for_date: str | None = None) -> dict[str, Any]:
     """Get the user's VO2 max as of a date (YYYY-MM-DD, default today), cycling-specific
-    and generic values plus Garmin fitness age.
+    and generic values plus a VO2-max-derived fitness age. Note: the Connect app
+    displays a different, multi-component fitness age — use get_fitness_age for that.
     """
     cdate = _valid_date(for_date)
     return normalize_vo2max(_call(lambda c: c.max_metrics(cdate)), cdate)
+
+
+@mcp.tool()
+def get_fitness_age(for_date: str | None = None) -> dict[str, Any]:
+    """Get Garmin fitness age for a date (YYYY-MM-DD, default today) — the value the
+    Connect app displays, computed from chronological age, weekly vigorous activity
+    (days and minutes), resting heart rate, and BMI, each returned with its target
+    where Garmin provides one. Prefer this over get_vo2_max's fitness_age when the
+    user asks about fitness age.
+    """
+    cdate = _valid_date(for_date)
+    return normalize_fitness_age(_call(lambda c: c.fitness_age(cdate)), cdate)
 
 
 @mcp.tool()

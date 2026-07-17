@@ -148,6 +148,10 @@ class GarminClient:
         with _mapped_errors():
             return cast(list[dict[str, Any]] | dict[str, Any], self._api.get_max_metrics(cdate))
 
+    def fitness_age(self, cdate: str) -> dict[str, Any]:
+        with _mapped_errors():
+            return cast(dict[str, Any], self._api.get_fitnessage_data(cdate))
+
     def cycling_ftp(self) -> dict[str, Any]:
         with _mapped_errors():
             return cast(dict[str, Any], self._api.get_cycling_ftp())

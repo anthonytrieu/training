@@ -106,6 +106,7 @@ EXPECTED_TOOLS = {
     "get_sleep_history",
     "get_resting_heart_rate_history",
     "get_vo2_max",
+    "get_fitness_age",
     "get_current_ftp",
     "get_weekly_training_summary",
     "get_training_plan_context",
@@ -157,6 +158,33 @@ def test_recovery_time_extracted_from_readiness(monkeypatch: pytest.MonkeyPatch)
     result = server.get_recovery_time("2026-07-16")
     assert result["available"] is True
     assert result["recovery_time_h"] == 18.0
+
+
+def test_fitness_age_reads_dedicated_endpoint(monkeypatch: pytest.MonkeyPatch) -> None:
+    fake = FakeGarminClient([])
+    fake.canned["fitness_age"] = load_json("fitness_age.json")
+    install_fake(monkeypatch, fake)
+
+    result = server.get_fitness_age("2026-07-16")
+    assert result["fitness_age"] == 18.0
+    assert result["chronological_age"] == 24.0
+    assert result["components"]["vigorous_days_per_week"] == {"value": 2.3, "target": 3.0}
+    assert result["components"]["resting_hr_bpm"] == {"value": 53.0, "target": None}
+    assert result["components"]["bmi"]["target"] == 20.7
+    assert "get_vo2_max" in result["note"]
+
+
+def test_fitness_age_missing_data_yields_none_not_guesses(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fake = FakeGarminClient([])
+    fake.canned["fitness_age"] = {}
+    install_fake(monkeypatch, fake)
+
+    result = server.get_fitness_age("2026-07-16")
+    assert result["fitness_age"] is None
+    assert result["components"]["bmi"] is None
+    assert result["last_updated"] is None
 
 
 def test_hrv_history_separates_missing_days(monkeypatch: pytest.MonkeyPatch) -> None:
