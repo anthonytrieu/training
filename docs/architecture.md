@@ -58,6 +58,17 @@ Local dashboard + coach chat, decided 2026-07-16:
 - Single-user, 127.0.0.1 only, no auth. Verified end-to-end with headless-browser
   screenshots and live chat round-trips (multi-turn memory, real tool calls).
 
+## Fueling planner (added 2026-07-16)
+
+Client-side only (`web/src/lib/fueling.ts` + `web/src/pages/fuel.tsx`) — no backend or
+AI cost. Inspired by Roadman Cycling, Rule 28, CarbEngine and Nduranz calculators.
+Encoded guidance: carb targets by duration/intensity (30-120 g/h; >60 needs dual-source
+glucose+fructose, >90 needs gut training — Jeukendrup dual-transporter model), fluid at
+~80% of sweat rate capped at 1 L/h practical intake, sodium from sweat volume × mg/L
+(default 950, typical 230-1600). Product database values are approximate and labeled as
+such. Plans persist to localStorage; `planSummaryForCoach` hands the plan to the chat
+for review against training data.
+
 ## Milestones
 
 1. ✅ Local auth + five most recent cycling activities via CLI.

@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Layout from "@/components/layout"
 import Coach from "@/pages/coach"
 import Dashboard from "@/pages/dashboard"
+import Fuel from "@/pages/fuel"
 import Plan from "@/pages/plan"
 import RideDetail from "@/pages/ride-detail"
 
@@ -13,6 +14,7 @@ export default function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/rides/:id" element={<RideDetail />} />
           <Route path="/plan" element={<Plan />} />
+          <Route path="/fuel" element={<Fuel />} />
           <Route path="/coach" element={<Coach />} />
         </Route>
       </Routes>

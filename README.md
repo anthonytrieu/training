@@ -136,8 +136,16 @@ If the Garmin session expires, the tool returns a clear error telling you to re-
 ## Web app (dashboard + coach chat)
 
 A local single-user web app: training dashboard (weekly volume/load, wellness trends,
-ride detail with streams and zones, the Whistler plan) plus a Claude coach chat with
-live access to the Garmin tools.
+ride detail with streams and zones, the Whistler plan), a fueling planner, plus a
+Claude coach chat with live access to the Garmin tools.
+
+The **fueling planner** (`/fuel`) builds a timed carbs/fluid/sodium schedule from ride
+duration, intensity, sweat rate and product choices (Maurten, SiS, homemade mix, gels,
+real food), with a Whistler preset, saved plans, print/PDF, and a "Review with coach"
+handoff into the chat. Guidelines encoded: 30-60 g/h under 2 h, 60-90 g/h for 2-3 h,
+90+ g/h beyond 3 h with dual-source (glucose+fructose) carbs; fluid anchored to sweat
+rate; sodium to sweat concentration. It warns on >90 g/h without gut training,
+over-drinking vs. sweat loss, and sodium shortfalls.
 
 ```bash
 cd web && npm install && npm run build && cd ..   # build frontend once

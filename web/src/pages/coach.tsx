@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import ReactMarkdown from "react-markdown"
+import { useLocation } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -43,8 +44,10 @@ async function* readSse(resp: Response): AsyncGenerator<SseEvent> {
 }
 
 export default function Coach() {
+  const location = useLocation()
+  const prefill = (location.state as { prefill?: string } | null)?.prefill
   const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [input, setInput] = useState("")
+  const [input, setInput] = useState(prefill ?? "")
   const [busy, setBusy] = useState(false)
   const sessionRef = useRef<string | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
