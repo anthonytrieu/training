@@ -35,6 +35,29 @@ data access is split between the **official Strava MCP** (hosted, OAuth) and a
    duration and distance tolerance; prefer Garmin for sensor/recovery detail, Strava
    for its fitness trends and cross-sport analytics. Never double-count.
 
+## Web app (Milestone 6)
+
+Local dashboard + coach chat, decided 2026-07-16:
+
+- **Backend**: FastAPI (`src/garmin_coach/web/`). Dashboard endpoints are thin wrappers
+  over the MCP server's tool functions, so the browser and Claude read identical
+  normalized data; typed Garmin errors map to 401/429/503. The built frontend is
+  served statically with an SPA fallback.
+- **Chat**: Claude Agent SDK (`claude-agent-sdk`) using the local Claude Code
+  subscription login (user decision: no separate API billing), model
+  `claude-opus-4-8`, streaming over SSE with tool-activity events. The agent is
+  sandboxed to the garmin MCP server via `allowed_tools=["mcp__garmin"]`,
+  `strict_mcp_config`, and a disallow-list of built-in tools. Gotcha discovered in
+  verification: Claude Code 2.1+ defers MCP tool schemas behind `ToolSearch`, so
+  `ToolSearch` must stay allowed and `tools=[]` must not be used — either hides all
+  garmin tools.
+- **Frontend**: Vite + React + TS + Tailwind + shadcn/ui, Recharts for charts (palette
+  validated with the dataviz skill's checker), sidebar layout, dark mode. Chat UI is a
+  small custom SSE component rather than assistant-ui: our SSE protocol is 4 event
+  types, and a custom component was simpler than adapting assistant-ui's runtime.
+- Single-user, 127.0.0.1 only, no auth. Verified end-to-end with headless-browser
+  screenshots and live chat round-trips (multi-turn memory, real tool calls).
+
 ## Milestones
 
 1. ✅ Local auth + five most recent cycling activities via CLI.

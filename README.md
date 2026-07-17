@@ -133,6 +133,29 @@ Claude calls `get_recent_activities(limit=N)` and receives normalized ride summa
 If the Garmin session expires, the tool returns a clear error telling you to re-run
 `garmin-setup`; rate limits (HTTP 429) return a wait-and-retry message.
 
+## Web app (dashboard + coach chat)
+
+A local single-user web app: training dashboard (weekly volume/load, wellness trends,
+ride detail with streams and zones, the Whistler plan) plus a Claude coach chat with
+live access to the Garmin tools.
+
+```bash
+cd web && npm install && npm run build && cd ..   # build frontend once
+garmin-coach-web                                   # serve everything on http://127.0.0.1:8787
+```
+
+Dev mode (hot reload): run `garmin-coach-web` in one terminal and `cd web && npm run dev`
+in another, then open http://localhost:5173.
+
+The chat is powered by the **Claude Agent SDK** using your local **Claude Code login** —
+no API key needed. Prerequisites and caveats:
+
+- Claude Code must be installed and logged in on this machine.
+- Chat usage draws on your Claude subscription limits (model: Opus 4.8).
+- The coach agent gets only the read-only `garmin-mcp` tools — no shell, file, or
+  network tools — and other MCP servers on your machine are never loaded.
+- The app binds to 127.0.0.1 and has no auth: never expose it to the internet.
+
 ## Development commands
 
 ```bash
