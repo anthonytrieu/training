@@ -170,6 +170,34 @@ no API key needed. Prerequisites and caveats:
   network tools — and other MCP servers on your machine are never loaded.
 - The app binds to 127.0.0.1 and has no auth: never expose it to the internet.
 
+## Use it from your phone (private, via Tailscale)
+
+The app stays on this Mac — your phone reaches it over a private WireGuard network.
+Garmin tokens never leave the machine and the chat keeps using your Claude
+subscription. One-time setup:
+
+1. **Install Tailscale on the Mac**: `brew install --cask tailscale-app`
+   (asks for your macOS password), then open Tailscale.app and sign in.
+2. **Install the Tailscale app on your phone** (App Store / Play Store), sign in with
+   the same account.
+3. **Expose the app to your tailnet with HTTPS** (server keeps its localhost binding):
+   ```bash
+   alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+   tailscale serve --bg http://127.0.0.1:8787
+   tailscale serve status   # shows your https://<mac-name>.<tailnet>.ts.net URL
+   ```
+4. **On the phone**: open that URL → Share → **Add to Home Screen**. It installs as a
+   standalone "Coach" app (PWA manifest + icons included).
+
+The server auto-starts on login via launchd
+(`deploy/com.garmin-coach.web.plist` → `~/Library/LaunchAgents/`, restarts on crash;
+logs at `~/Library/Logs/garmin-coach.log`). The Mac must be awake to serve — enable
+"Prevent automatic sleeping when the display is off" (System Settings → Displays →
+Advanced, on power) or run `caffeinate`.
+
+This setup is tailnet-only: nothing is exposed to the public internet, and devices on
+your Tailscale account are the auth boundary.
+
 ## Development commands
 
 ```bash

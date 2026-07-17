@@ -186,7 +186,7 @@ export default function Dashboard() {
         <CardHeader>
           <CardTitle className="text-sm">Recent rides</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           {rides.data ? (
             <Table>
               <TableHeader>

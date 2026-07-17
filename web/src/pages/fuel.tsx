@@ -148,7 +148,7 @@ export default function Fuel() {
         </Button>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[380px_1fr] [&>div]:min-w-0">
         {/* Inputs */}
         <div className="flex flex-col gap-4">
           <Card>
@@ -166,7 +166,7 @@ export default function Fuel() {
                     setDurationTouched(false)
                   }}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full min-w-0 [&_span]:truncate">
                     <SelectValue>
                       {course
                         ? `${course.name} (${fmtNum(course.distance_km, 1)} km · +${fmtNum(course.elevation_gain_m)} m)`
@@ -225,7 +225,7 @@ export default function Fuel() {
                   value={inputs.intensity}
                   onValueChange={(v) => v && set("intensity", v as Intensity)}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full min-w-0 [&_span]:truncate">
                     <SelectValue>
                       {{ endurance: "Endurance (Z2)", tempo: "Tempo / fondo pace (Z3)", race: "Race / hard" }[inputs.intensity]}
                     </SelectValue>
@@ -325,7 +325,7 @@ export default function Fuel() {
               <div>
                 <Label className="mb-1.5 text-xs">Drink mix</Label>
                 <Select value={inputs.drink_id} onValueChange={(v) => v && set("drink_id", v)}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full min-w-0 [&_span]:truncate">
                     <SelectValue>{drinks.find((p) => p.id === inputs.drink_id)?.name}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
@@ -343,7 +343,7 @@ export default function Fuel() {
                   value={inputs.solid_id ?? "none"}
                   onValueChange={(v) => v != null && set("solid_id", v === "none" ? null : v)}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full min-w-0 [&_span]:truncate">
                     <SelectValue>
                       {inputs.solid_id
                         ? solids.find((p) => p.id === inputs.solid_id)?.name
@@ -366,7 +366,7 @@ export default function Fuel() {
                   value={String(inputs.interval_min)}
                   onValueChange={(v) => v && set("interval_min", Number(v))}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full min-w-0 [&_span]:truncate">
                     <SelectValue>{`Every ${inputs.interval_min} min`}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
@@ -468,7 +468,7 @@ export default function Fuel() {
                 </Button>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>

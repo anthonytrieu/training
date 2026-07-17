@@ -108,7 +108,7 @@ export default function Coach() {
   }
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-0px)] max-w-3xl flex-col p-6">
+    <div className="mx-auto flex h-dvh max-w-3xl flex-col p-4 sm:p-6">
       <div className="mb-2">
         <h1 className="text-xl font-semibold tracking-tight">Coach</h1>
         <p className="text-sm text-muted-foreground">

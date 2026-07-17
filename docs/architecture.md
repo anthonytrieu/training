@@ -58,6 +58,18 @@ Local dashboard + coach chat, decided 2026-07-16:
 - Single-user, 127.0.0.1 only, no auth. Verified end-to-end with headless-browser
   screenshots and live chat round-trips (multi-turn memory, real tool calls).
 
+## Remote access (added 2026-07-16)
+
+Phone access via **Tailscale** (user decision — private use, no public URL): the app
+keeps running on the Mac with its 127.0.0.1 binding; `tailscale serve` proxies
+tailnet-HTTPS to localhost. Rationale over alternatives: Garmin tokens stay local, the
+coach chat keeps using the Claude Code subscription (a cloud host would force the
+paid-API-key switch), and the tailnet replaces an auth layer. launchd LaunchAgent
+(`deploy/com.garmin-coach.web.plist`) keeps the server running; PWA manifest + icons
+make it installable on the phone. Future path if needs change: cloud hosting requires
+an API key for chat, an auth layer, and server-side Garmin tokens (with some
+datacenter-IP blocking risk on Garmin's unofficial API).
+
 ## Fueling planner (added 2026-07-16)
 
 Client-side only (`web/src/lib/fueling.ts` + `web/src/pages/fuel.tsx`) — no backend or

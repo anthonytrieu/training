@@ -132,7 +132,7 @@ export default function RideDetail() {
         <CardHeader>
           <CardTitle className="text-sm">Laps</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           {detail.data ? (
             <Table>
               <TableHeader>
