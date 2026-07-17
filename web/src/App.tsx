@@ -4,6 +4,7 @@ import Coach from "@/pages/coach"
 import Dashboard from "@/pages/dashboard"
 import Fuel from "@/pages/fuel"
 import Plan from "@/pages/plan"
+import Schedule from "@/pages/schedule"
 import RideDetail from "@/pages/ride-detail"
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/rides/:id" element={<RideDetail />} />
           <Route path="/plan" element={<Plan />} />
+          <Route path="/schedule" element={<Schedule />} />
           <Route path="/fuel" element={<Fuel />} />
           <Route path="/coach" element={<Coach />} />
         </Route>

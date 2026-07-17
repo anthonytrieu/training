@@ -7,6 +7,7 @@ original typed cause, which maps to meaningful HTTP statuses here.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -76,6 +77,15 @@ def status() -> dict[str, Any]:
 @router.get("/courses")
 def courses() -> list[dict[str, Any]]:
     return _call_tool(server.get_courses)  # type: ignore[no-any-return]
+
+
+@router.get("/sessions")
+def sessions() -> dict[str, Any]:
+    """Structured weekly sessions of the current training plan."""
+    path = PLAN_DIR / "whistler-sessions.json"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="No structured session plan found")
+    return json.loads(path.read_text())  # type: ignore[no-any-return]
 
 
 @router.get("/plan")

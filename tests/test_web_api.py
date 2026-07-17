@@ -79,6 +79,18 @@ def test_courses_endpoint(web: TestClient, monkeypatch: pytest.MonkeyPatch):
     assert "Afternoon Ride" in names
 
 
+def test_sessions_endpoint_serves_structured_plan(web: TestClient):
+    resp = web.get("/api/sessions")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert len(body["weeks"]) == 8
+    week1 = body["weeks"][0]
+    assert week1["start"] == "2026-07-20"
+    assert all("id" in s and "title" in s and "kind" in s for s in week1["sessions"])
+    race = body["weeks"][7]["sessions"][-1]
+    assert race["fixed_date"] == "2026-09-12"
+
+
 def test_plan_endpoint_serves_markdown(web: TestClient):
     resp = web.get("/api/plan")
     assert resp.status_code == 200

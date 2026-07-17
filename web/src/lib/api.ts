@@ -140,8 +140,30 @@ export interface Course {
   elevation_loss_m: number | null
 }
 
+export interface SessionsResponse {
+  plan: string
+  event_date: string
+  note: string
+  weeks: {
+    week: number
+    start: string
+    focus: string
+    sessions: {
+      id: string
+      title: string
+      kind: "intervals" | "tempo" | "long" | "easy" | "race"
+      duration_min: number
+      target: string
+      detail: string
+      alt?: string
+      fixed_date?: string
+    }[]
+  }[]
+}
+
 export const api = {
   courses: () => apiGet<Course[]>(`/api/courses`),
+  sessions: () => apiGet<SessionsResponse>(`/api/sessions`),
   rides: (limit = 10) => apiGet<RideSummary[]>(`/api/rides?limit=${limit}`),
   rideDetail: (id: number) => apiGet<RideDetailResponse>(`/api/rides/${id}`),
   weekly: (weeks = 8) =>

@@ -139,6 +139,12 @@ A local single-user web app: training dashboard (weekly volume/load, wellness tr
 ride detail with streams and zones, the Whistler plan), a fueling planner, plus a
 Claude coach chat with live access to the Garmin tools.
 
+The **weekly schedule** (`/schedule`) turns each plan week's sessions into a pool you
+drag (or tap) onto whichever days fit your life — no fixed Tue/Thu/Sat/Sun. Assignments
+persist in the browser; days show rides already recorded on Garmin; race day is locked
+to Sep 12; "Review week with coach" sends your arrangement to the chat. The structured
+sessions live in `training/whistler-sessions.json` (derived from the plan markdown).
+
 The **fueling planner** (`/fuel`) builds a timed carbs/fluid/sodium schedule from ride
 duration, intensity, sweat rate and product choices (Maurten, SiS, homemade mix, gels,
 real food), with a Whistler preset, saved plans, print/PDF, and a "Review with coach"

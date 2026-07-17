@@ -1,0 +1,94 @@
+{
+  "plan": "Whistler Gran Fondo — 8-Week Plan",
+  "event_date": "2026-09-12",
+  "note": "Sessions per week — assign them to whichever days fit your life. Keep 1 easy/rest day between hard sessions, and never drop the long ride.",
+  "weeks": [
+    {
+      "week": 1,
+      "start": "2026-07-20",
+      "focus": "Sustained-effort conversion — break the stop-go habit",
+      "sessions": [
+        { "id": "w1s1", "title": "3×15 min sweet spot", "kind": "intervals", "duration_min": 90, "target": "245–260 W, 5 min easy between", "detail": "15 min warm-up first. No stops mid-interval — UBC loop, Iona flats, or Stanley Park at a quiet hour.", "alt": "Z2 spin, same duration" },
+        { "id": "w1s2", "title": "30 min continuous tempo", "kind": "tempo", "duration_min": 70, "target": "218–240 W, cadence 85+", "detail": "60–75 min total with the tempo block unbroken.", "alt": "Z2 spin, same duration" },
+        { "id": "w1s3", "title": "Long ride 70 km / ~800 m", "kind": "long", "duration_min": 180, "target": "Z2 170–210 W, minimal stops", "detail": "Include one 20+ min climb at tempo — Cypress to first lookout or Seymour half-way.", "alt": "Shorten to 50 km, keep it continuous" },
+        { "id": "w1s4", "title": "Easy spin", "kind": "easy", "duration_min": 60, "target": "Z1–Z2", "detail": "Genuinely easy — conversation pace." }
+      ]
+    },
+    {
+      "week": 2,
+      "start": "2026-07-27",
+      "focus": "Build — extend",
+      "sessions": [
+        { "id": "w2s1", "title": "2×20 min sweet spot", "kind": "intervals", "duration_min": 90, "target": "250–265 W, 8 min easy between", "detail": "Continuous intervals, no stops.", "alt": "Z2 spin, same duration" },
+        { "id": "w2s2", "title": "2×20 min tempo, rolling terrain", "kind": "tempo", "duration_min": 75, "target": "218–240 W", "detail": "Rolling route; hold the effort over the rollers.", "alt": "Z2 spin, same duration" },
+        { "id": "w2s3", "title": "Long ride 85 km / ~1,000 m", "kind": "long", "duration_min": 210, "target": "Z2 + climbs at 220–245 W", "detail": "Full Cypress or full Seymour in the middle. Practice race fueling: 60–80 g carbs/h, drink every 15 min.", "alt": "Cut to 70 km, keep the climb" },
+        { "id": "w2s4", "title": "Easy spin", "kind": "easy", "duration_min": 75, "target": "Z1–Z2", "detail": "Recovery pace." }
+      ]
+    },
+    {
+      "week": 3,
+      "start": "2026-08-03",
+      "focus": "Biggest build week — finish it tired",
+      "sessions": [
+        { "id": "w3s1", "title": "2×20 min threshold", "kind": "intervals", "duration_min": 90, "target": "265–285 W", "detail": "Hard but repeatable — if the second interval collapses, the first was too hard.", "alt": "2×20 tempo instead" },
+        { "id": "w3s2", "title": "90 min hilly tempo", "kind": "tempo", "duration_min": 90, "target": "~45 min total in Z3", "detail": "Hilly route, accumulate tempo on the climbs.", "alt": "Z2 spin, same duration" },
+        { "id": "w3s3", "title": "Long ride 100 km / ~1,300 m", "kind": "long", "duration_min": 240, "target": "Climbs at goal fondo pace 220–250 W", "detail": "Vancouver → Horseshoe Bay → Lions Bay and back — the actual event road.", "alt": "85 km version, same route shortened" },
+        { "id": "w3s4", "title": "Easy spin", "kind": "easy", "duration_min": 70, "target": "Z1–Z2", "detail": "You should finish this week tired — keep this one honest-easy." }
+      ]
+    },
+    {
+      "week": 4,
+      "start": "2026-08-10",
+      "focus": "Recovery — do not skip; fitness consolidates here",
+      "sessions": [
+        { "id": "w4s1", "title": "1×20 min tempo (only intensity)", "kind": "tempo", "duration_min": 60, "target": "218–240 W", "detail": "The week's only quality. Cut total volume ~40%.", "alt": "Skip if HRV/sleep haven't rebounded" },
+        { "id": "w4s2", "title": "Easy long ride 60 km, flat", "kind": "long", "duration_min": 150, "target": "Social pace, Z1–Z2", "detail": "Flat and easy — Iona/Steveston style.", "alt": "45 km if legs are heavy" },
+        { "id": "w4s3", "title": "Easy spin", "kind": "easy", "duration_min": 60, "target": "Z1–Z2", "detail": "Or a day fully off the bike — watch HRV and sleep rebound." }
+      ]
+    },
+    {
+      "week": 5,
+      "start": "2026-08-17",
+      "focus": "Peak 1",
+      "sessions": [
+        { "id": "w5s1", "title": "3×20 min sweet spot — signature workout", "kind": "intervals", "duration_min": 105, "target": "250–265 W, 5–8 min between", "detail": "60 min of sweet spot — the signature fondo session.", "alt": "2×20 if the third would collapse" },
+        { "id": "w5s2", "title": "5×3 min Z5 touch-up", "kind": "intervals", "duration_min": 75, "target": "305–330 W, full recoveries", "detail": "Keeps the top end awake without big fatigue.", "alt": "Z2 spin, same duration" },
+        { "id": "w5s3", "title": "Long ride 110 km / ~1,500 m — rehearsal", "kind": "long", "duration_min": 270, "target": "Target event pace; do NOT surge above 260 W on climbs", "detail": "Full rehearsal: same breakfast, same fueling, same pacing discipline.", "alt": "90 km, same discipline" },
+        { "id": "w5s4", "title": "Easy spin", "kind": "easy", "duration_min": 75, "target": "Z1–Z2", "detail": "Recovery pace." }
+      ]
+    },
+    {
+      "week": 6,
+      "start": "2026-08-24",
+      "focus": "Peak 2 + dress rehearsal",
+      "sessions": [
+        { "id": "w6s1", "title": "2×25 min sweet spot", "kind": "intervals", "duration_min": 95, "target": "255–270 W", "detail": "Longest sustained blocks of the plan.", "alt": "2×20 if fatigued" },
+        { "id": "w6s2", "title": "30 min tempo", "kind": "tempo", "duration_min": 60, "target": "218–240 W", "detail": "Otherwise easy.", "alt": "Z2 spin" },
+        { "id": "w6s3", "title": "DRESS REHEARSAL 120–130 km / 1,500–1,800 m", "kind": "long", "duration_min": 300, "target": "Full event nutrition, clothing, ~7 AM start", "detail": "Ideal: Horseshoe Bay → Squamish (→ turn back). This ride answers every remaining question.", "alt": "Do not skip — shorten to 100 km if needed" },
+        { "id": "w6s4", "title": "Recovery spin only", "kind": "easy", "duration_min": 45, "target": "Z1", "detail": "Legs up otherwise." }
+      ]
+    },
+    {
+      "week": 7,
+      "start": "2026-08-31",
+      "focus": "Sharpen — start shedding fatigue",
+      "sessions": [
+        { "id": "w7s1", "title": "2×15 min threshold", "kind": "intervals", "duration_min": 80, "target": "270–285 W", "detail": "Sharp but short — volume this week ≈ 60–70% of week 6.", "alt": "2×12 min" },
+        { "id": "w7s2", "title": "20 min tempo", "kind": "tempo", "duration_min": 60, "target": "218–240 W", "detail": "Comfortable quality.", "alt": "Z2 spin" },
+        { "id": "w7s3", "title": "Long ride 80 km moderate / ~800 m", "kind": "long", "duration_min": 200, "target": "Comfortable, not hard", "detail": "Enjoy it — the work is done.", "alt": "65 km" },
+        { "id": "w7s4", "title": "Easy spin", "kind": "easy", "duration_min": 60, "target": "Z1–Z2", "detail": "Recovery pace." }
+      ]
+    },
+    {
+      "week": 8,
+      "start": "2026-09-07",
+      "focus": "Taper and race",
+      "sessions": [
+        { "id": "w8s1", "title": "3×8 min @ 260 W", "kind": "intervals", "duration_min": 60, "target": "~90% FTP", "detail": "Enough intensity to stay sharp. Suggested: Tuesday.", "alt": "2×8 min" },
+        { "id": "w8s2", "title": "Easy spin", "kind": "easy", "duration_min": 45, "target": "Z1", "detail": "Suggested: Wednesday. Thursday off or 30 min spin." },
+        { "id": "w8s3", "title": "Openers + prep", "kind": "tempo", "duration_min": 30, "target": "3×1 min race-pace openers", "detail": "Prep bike, bottles, drop bag. In bed by 10 PM. Suggested: Friday.", "alt": "" },
+        { "id": "w8s4", "title": "🏁 RBC GranFondo Whistler — RACE DAY", "kind": "race", "duration_min": 290, "target": "Start 190–210 W; climbs 220–250 W; never >260 W before Squamish", "detail": "Eat from minute 20: 60–90 g carbs/h, 500–750 ml fluid/h. The ride is decided on the Squamish→Whistler false-flat.", "fixed_date": "2026-09-12" }
+      ]
+    }
+  ]
+}
