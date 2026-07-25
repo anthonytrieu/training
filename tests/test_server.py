@@ -111,6 +111,8 @@ EXPECTED_TOOLS = {
     "get_weekly_training_summary",
     "get_training_plan_context",
     "get_courses",
+    "get_activity_weather",
+    "get_weather_forecast",
 }
 
 

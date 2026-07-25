@@ -41,13 +41,23 @@ def rides(limit: int = 10) -> list[dict[str, Any]]:
 
 @router.get("/rides/{activity_id}")
 def ride_detail(activity_id: int, max_points: int = 200) -> dict[str, Any]:
+    try:
+        ride_weather = server.get_activity_weather(activity_id)
+    except Exception:
+        ride_weather = None  # weather is a nice-to-have; never fail the page for it
     return {
         "summary": _call_tool(server.get_activity_summary, activity_id),
         "power_zones": _call_tool(server.get_activity_power_data, activity_id),
         "hr_zones": _call_tool(server.get_activity_heart_rate_data, activity_id),
         "splits": _call_tool(server.get_activity_splits, activity_id),
         "series": _call_tool(server.get_activity_details, activity_id, max_points=max_points),
+        "weather": ride_weather,
     }
+
+
+@router.get("/weather")
+def weather_forecast(days: int = 7) -> dict[str, Any]:
+    return _call_tool(server.get_weather_forecast, days=days)  # type: ignore[no-any-return]
 
 
 @router.get("/weekly")

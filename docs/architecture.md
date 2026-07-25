@@ -74,6 +74,17 @@ make it installable on the phone. Future path if needs change: cloud hosting req
 an API key for chat, an auth layer, and server-side Garmin tokens (with some
 datacenter-IP blocking risk on Garmin's unofficial API).
 
+## Weather (added 2026-07-25)
+
+Two sources, matching the two jobs: **Garmin's recorded per-ride weather**
+(`get_activity_weather`, °F/mph converted to metric; explains HR drift and slow-speed
+rides after the fact) and **Open-Meteo forecasts** (`get_weather_forecast`, free/no
+key, Vancouver constant, ~30-min in-memory cache; feeds planning). Surfaced on the
+dashboard (week-ahead strip), schedule day cells (temp + precip chips), ride detail
+(recorded conditions line), the fuel page (sweat-rate hint), and the coach prompt
+(never blame weather without data; heat → fluids/earlier starts; rain → easier
+alternative).
+
 ## Fueling planner (added 2026-07-16)
 
 Client-side only (`web/src/lib/fueling.ts` + `web/src/pages/fuel.tsx`) — no backend or

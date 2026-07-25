@@ -121,6 +121,10 @@ class GarminClient:
                 self._api.get_activity_power_in_timezones(activity_id),
             )
 
+    def activity_weather(self, activity_id: str) -> dict[str, Any]:
+        with _mapped_errors():
+            return cast(dict[str, Any], self._api.get_activity_weather(activity_id))
+
     def activity_details(self, activity_id: str, max_points: int = 150) -> dict[str, Any]:
         with _mapped_errors():
             return cast(

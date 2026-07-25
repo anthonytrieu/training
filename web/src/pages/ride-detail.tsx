@@ -86,6 +86,18 @@ export default function RideDetail() {
           {s?.["power_note"] != null && (
             <p className="text-xs text-muted-foreground">Power: {String(s["power_note"])}.</p>
           )}
+          {detail.data?.weather && detail.data.weather.temp_c != null && (
+            <p className="mt-1 text-xs text-muted-foreground">
+              Conditions: {detail.data.weather.conditions ?? "recorded"} ·{" "}
+              {fmtNum(detail.data.weather.temp_c)}°C
+              {detail.data.weather.apparent_temp_c != null &&
+                ` (feels ${fmtNum(detail.data.weather.apparent_temp_c)}°C)`}
+              {detail.data.weather.humidity_pct != null &&
+                ` · ${fmtNum(detail.data.weather.humidity_pct)}% humidity`}
+              {detail.data.weather.wind_kmh != null &&
+                ` · wind ${fmtNum(detail.data.weather.wind_kmh)} km/h ${detail.data.weather.wind_direction ?? ""}`}
+            </p>
+          )}
         </CardContent>
       </Card>
 

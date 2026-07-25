@@ -90,6 +90,8 @@ claude mcp add garmin -- /Users/anthonytrieu/Desktop/garmin/.venv/bin/garmin-mcp
 | `get_resting_heart_rate_history(days, end_date?)` | Daily resting HR (≤14 days) |
 | `get_vo2_max(date?)` | Cycling + generic VO2 max, fitness age |
 | `get_current_ftp()` | FTP in watts, date set, staleness |
+| `get_activity_weather(activity_id)` | Weather recorded during a ride (Garmin: temp, feels-like, humidity, wind) |
+| `get_weather_forecast(days)` | Vancouver forecast (Open-Meteo, free/no key): daily + next 36 h for session and fueling planning |
 | `get_weekly_training_summary(weeks, end_date?)` | Per-ISO-week totals: rides, hours, distance, elevation, training load, hardest ride (≤12 weeks) |
 | `get_training_plan_context(wellness_days)` | One-call bundle for planning: FTP, VO2 max, training status, last 14 days of rides, recent sleep/HRV/resting HR |
 

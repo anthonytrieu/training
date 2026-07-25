@@ -52,6 +52,7 @@ export default function Dashboard() {
   const weekly = useApi(() => api.weekly(8))
   const wellness = useApi(() => api.wellness(7))
   const rides = useApi(() => api.rides(30))
+  const forecast = useApi(() => api.weather(5))
 
   const anyAuthError = [status, weekly, wellness, rides].find(
     (q) => q.error,
@@ -145,6 +146,36 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Week ahead weather */}
+      {forecast.data && (
+        <Card className="py-4">
+          <CardContent className="px-4">
+            <div className="mb-2 text-xs font-medium text-muted-foreground">
+              Week ahead — {forecast.data.location}
+            </div>
+            <div className="grid grid-cols-5 gap-2">
+              {forecast.data.daily.map((d) => (
+                <div key={d.date} className="rounded-md border p-2 text-center">
+                  <div className="text-xs font-medium">
+                    {new Date(`${d.date}T00:00:00`).toLocaleDateString(undefined, { weekday: "short" })}
+                  </div>
+                  <div className="text-sm font-semibold tabular-nums">
+                    {Math.round(d.temp_max_c ?? 0)}°
+                    <span className="ml-1 text-xs font-normal text-muted-foreground">
+                      {Math.round(d.temp_min_c ?? 0)}°
+                    </span>
+                  </div>
+                  <div className="truncate text-[11px] text-muted-foreground">{d.conditions ?? "–"}</div>
+                  <div className="text-[11px] text-muted-foreground">
+                    {d.precip_probability_pct ?? 0}% ☂ · {Math.round(d.wind_max_kmh ?? 0)} km/h
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Wellness tiles */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">

@@ -520,6 +520,28 @@ def build_weekly_summaries(
     return summaries
 
 
+def _f_to_c(value: float | None) -> float | None:
+    return None if value is None else (value - 32) * 5 / 9
+
+
+def normalize_activity_weather(raw: dict[str, Any], activity_id: int) -> dict[str, Any]:
+    """Recorded conditions during a ride. Garmin reports °F and mph."""
+    conditions = (raw.get("weatherTypeDTO") or {}).get("desc")
+    wind_mph = _num(raw, "windSpeed")
+    return {
+        "activity_id": activity_id,
+        "conditions": None if conditions in (None, "Unknown") else conditions,
+        "temp_c": _round(_f_to_c(_num(raw, "temp"))),
+        "apparent_temp_c": _round(_f_to_c(_num(raw, "apparentTemp"))),
+        "dew_point_c": _round(_f_to_c(_num(raw, "dewPoint"))),
+        "humidity_pct": _num(raw, "relativeHumidity"),
+        "wind_kmh": _round(None if wind_mph is None else wind_mph * 1.60934),
+        "wind_direction": raw.get("windDirectionCompassPoint"),
+        "issued_at": raw.get("issueDate"),
+        "source": SOURCE_GARMIN,
+    }
+
+
 def normalize_courses(raw: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Saved Garmin courses, longest first."""
     courses = []

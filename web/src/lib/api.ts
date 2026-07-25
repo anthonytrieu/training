@@ -74,6 +74,7 @@ export interface RideDetailResponse {
   power_zones: { zones: ZoneBucket[]; total_time_s: number }
   hr_zones: { zones: ZoneBucket[]; total_time_s: number }
   splits: { lap_count: number; laps: Record<string, number | string | null>[] }
+  weather: RideWeather | null
   series: {
     point_count: number
     points: {
@@ -163,7 +164,38 @@ export interface SessionsResponse {
   }[]
 }
 
+export interface ForecastDay {
+  date: string
+  temp_max_c: number | null
+  temp_min_c: number | null
+  precip_probability_pct: number | null
+  wind_max_kmh: number | null
+  conditions: string | null
+}
+
+export interface ForecastResponse {
+  location: string
+  daily: ForecastDay[]
+  next_36h: {
+    time: string
+    temp_c: number | null
+    precip_probability_pct: number | null
+    wind_kmh: number | null
+    conditions: string | null
+  }[]
+}
+
+export interface RideWeather {
+  conditions: string | null
+  temp_c: number | null
+  apparent_temp_c: number | null
+  humidity_pct: number | null
+  wind_kmh: number | null
+  wind_direction: string | null
+}
+
 export const api = {
+  weather: (days = 7) => apiGet<ForecastResponse>(`/api/weather?days=${days}`),
   courses: () => apiGet<Course[]>(`/api/courses`),
   sessions: () => apiGet<SessionsResponse>(`/api/sessions`),
   rides: (limit = 10) => apiGet<RideSummary[]>(`/api/rides?limit=${limit}`),

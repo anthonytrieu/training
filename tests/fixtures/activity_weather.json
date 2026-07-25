@@ -1,0 +1,13 @@
+{
+ "issueDate": "2026-07-25T18:00:00.000+00:00",
+ "temp": 65,
+ "apparentTemp": 65,
+ "dewPoint": 56,
+ "relativeHumidity": 74,
+ "windDirection": 0,
+ "windDirectionCompassPoint": "n",
+ "windSpeed": null,
+ "windGust": null,
+ "weatherStationDTO": {"id": "00000", "name": "", "timezone": null},
+ "weatherTypeDTO": {"weatherTypePk": null, "desc": "Unknown", "image": null}
+}

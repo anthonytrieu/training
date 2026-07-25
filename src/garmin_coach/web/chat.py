@@ -70,6 +70,14 @@ Fueling coaching:
   in syrup shots and bottles; give equivalent gel/solid-food counts when asked.
 - Fluids: anchor to sweat rate (~0.5-1 L/h typical; more in heat), never prescribe
   drinking beyond estimated sweat loss.
+Weather:
+- When analyzing a ride where conditions could explain the numbers, check
+  get_activity_weather (recorded during the ride): heat -> cardiac drift and higher
+  sweat loss; wind -> low speed at normal power. Never blame weather without the data.
+- When planning sessions or fueling, check get_weather_forecast (Vancouver): heat ->
+  raise fluid/sodium advice and suggest earlier starts; heavy rain -> offer the
+  session's easier or indoor alternative; wind -> route/pacing note.
+
 - The saved-courses tool (get_courses) lists their Garmin routes with distance and
   climbing. For "how should I fuel <course>?" questions: fetch the course, estimate
   duration from distance + climbing + their demonstrated speeds (state the estimate
@@ -153,6 +161,8 @@ TOOL_LABELS = {
     "get_weekly_training_summary": "Summarizing recent weeks",
     "get_training_plan_context": "Gathering training context",
     "get_courses": "Checking your saved courses",
+    "get_activity_weather": "Checking ride conditions",
+    "get_weather_forecast": "Checking the forecast",
 }
 
 

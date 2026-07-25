@@ -17,11 +17,13 @@ from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 
+from . import weather
 from .client import GarminClient, GarminClientError, ReauthRequiredError
 from .normalize import (
     build_weekly_summaries,
     compare_summaries,
     normalize_activity_summary,
+    normalize_activity_weather,
     normalize_courses,
     normalize_fitness_age,
     normalize_ftp,
@@ -448,6 +450,30 @@ Rules:
 - If data is missing or conflicting, say so instead of guessing.
 - Do not diagnose medical conditions.
 - Do not schedule or upload workouts to my device; present the plan in chat only."""
+
+
+@mcp.tool()
+def get_activity_weather(activity_id: int) -> dict[str, Any]:
+    """Get the recorded weather during one ride (from Garmin): conditions, temperature,
+    feels-like, dew point, humidity, wind. Use when conditions could explain the
+    numbers — heat drives HR drift and sweat loss; wind explains low speed at normal
+    power. Values may be null if the nearest station didn't report them.
+    """
+    raw = _call(lambda c: c.activity_weather(str(activity_id)))
+    return normalize_activity_weather(raw, activity_id)
+
+
+@mcp.tool()
+def get_weather_forecast(days: int = 5) -> dict[str, Any]:
+    """Get the Vancouver weather forecast (Open-Meteo): daily min/max temperature,
+    precipitation probability, wind, and conditions for 1-7 days, plus the next 36 h
+    in 3 h steps. Use when planning sessions or fueling: heat means more fluid/sodium
+    and earlier starts; heavy rain suggests the easier or indoor alternative.
+    """
+    try:
+        return weather.get_forecast(days=days)
+    except weather.WeatherUnavailableError as e:
+        raise RuntimeError(str(e)) from e
 
 
 @mcp.tool()

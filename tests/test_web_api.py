@@ -94,6 +94,16 @@ def test_sessions_endpoint_serves_structured_plan(web: TestClient):
     assert race["fixed_date"] == "2026-09-12"
 
 
+def test_weather_endpoint(web: TestClient, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(
+        "garmin_coach.weather.get_forecast",
+        lambda days=5: {"daily": [{"date": "2026-07-26"}], "source": "open-meteo"},
+    )
+    resp = web.get("/api/weather?days=3")
+    assert resp.status_code == 200
+    assert resp.json()["source"] == "open-meteo"
+
+
 def test_plan_endpoint_serves_markdown(web: TestClient):
     resp = web.get("/api/plan")
     assert resp.status_code == 200

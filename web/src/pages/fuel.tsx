@@ -78,11 +78,19 @@ export default function Fuel() {
   const [saved, setSaved] = useState<SavedPlan[]>(loadSaved)
   const [planName, setPlanName] = useState("")
   const [courses, setCourses] = useState<Course[]>([])
+  const [tomorrowHint, setTomorrowHint] = useState<string | null>(null)
   const [courseId, setCourseId] = useState<string>("manual")
   const [durationTouched, setDurationTouched] = useState(false)
 
   useEffect(() => {
     api.courses().then(setCourses, () => setCourses([]))
+    api.weather(2).then((f) => {
+      const d = f.daily.at(-1)
+      if (d?.temp_max_c != null) {
+        const band = d.temp_max_c < 12 ? "cool" : d.temp_max_c < 19 ? "mild" : d.temp_max_c < 26 ? "warm" : "hot"
+        setTomorrowHint(`Tomorrow ~${Math.round(d.temp_max_c)}°C${(d.precip_probability_pct ?? 0) >= 50 ? ", rain likely" : ""} — "${band}" fits`)
+      }
+    }, () => setTomorrowHint(null))
   }, [])
 
   const course = courses.find((c) => String(c.course_id) === courseId)
@@ -297,7 +305,7 @@ export default function Fuel() {
                 </div>
                 <p className="mt-1.5 text-xs text-muted-foreground">
                   Best measured: weigh yourself before/after a 1 h ride without drinking —
-                  1 kg lost ≈ 1 L/h.
+                  1 kg lost ≈ 1 L/h.{tomorrowHint && ` ${tomorrowHint}.`}
                 </p>
               </div>
               <div>

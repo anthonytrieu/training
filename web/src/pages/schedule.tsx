@@ -4,7 +4,7 @@ import { ErrorNote, useApi } from "@/components/data-state"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { api, type RideSummary } from "@/lib/api"
+import { api, type ForecastDay, type RideSummary } from "@/lib/api"
 import { fmtDuration, fmtNum } from "@/lib/format"
 
 interface SessionDef {
@@ -112,6 +112,7 @@ export default function Schedule() {
   const navigate = useNavigate()
   const plan = useApi(() => api.sessions())
   const rides = useApi(() => api.rides(30))
+  const forecast = useApi(() => api.weather(7))
   const [assignments, setAssignments] = useState<Assignments>(loadAssignments)
   const [weekIdx, setWeekIdx] = useState<number | null>(null)
 
@@ -270,6 +271,7 @@ export default function Schedule() {
           const isToday = date === todayIso()
           const daySessions = week.sessions.filter((s) => sessionDate(s) === date)
           const dayRides = ridesByDay[date] ?? []
+          const wx: ForecastDay | undefined = forecast.data?.daily.find((d) => d.date === date)
           return (
             <div
               key={date}
@@ -289,6 +291,11 @@ export default function Schedule() {
                 </span>
                 <span className="text-[10px] text-muted-foreground">{date.slice(5)}</span>
               </div>
+              {wx && (
+                <div className="text-[10px] text-muted-foreground" title={wx.conditions ?? undefined}>
+                  {Math.round(wx.temp_max_c ?? 0)}° · {wx.precip_probability_pct ?? 0}% ☂
+                </div>
+              )}
               {daySessions.map((s) => (
                 <SessionCard key={s.id} session={s} compact onUnassign={() => assign(s.id, null)} />
               ))}
