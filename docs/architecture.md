@@ -26,9 +26,13 @@ data access is split between the **official Strava MCP** (hosted, OAuth) and a
    names, ISO-8601 timestamps, `source` provenance (garmin/strava/calculated), and
    `None` for missing data instead of guesses. Garmin-reported values (e.g. Normalized
    Power) are labeled as reported, never silently recomputed.
-6. **Single-sided power caveat is structural.** Rides with power carry a `power_note`
-   stating the Rally RS100 doubles left-leg power, so no downstream analysis can claim
-   L/R balance.
+6. **Power-meter provenance is structural and per-ride.** The rider upgraded from a
+   single-sided Rally RS100 to a dual-sided Rally on 2026-07-24. Rather than a global
+   flag, each ride is classified from its own data: Garmin balance fields present →
+   dual-sided (`left/right_balance_pct` exposed, no caveat); power without balance →
+   legacy single-sided (`power_note` caveat kept, balance never inferred). The coach
+   prompt allows L/R discussion only for dual rides, treats 48-52% as normal, and
+   applies a ±5-10 W hedge only when comparing across the meter change.
 7. **No SQLite cache yet.** Added only if multi-week comparisons (Milestone 4–5)
    materially benefit or Garmin rate limits bite.
 8. **Dedup rule for Garmin+Strava (Milestone 4):** match on start time (±2 min),

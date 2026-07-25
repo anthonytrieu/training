@@ -62,7 +62,7 @@ def test_tool_returns_normalized_dicts(monkeypatch: pytest.MonkeyPatch) -> None:
 
     rides = server.get_recent_activities(limit=5)
 
-    assert len(rides) == 2
+    assert len(rides) == 3
     first = rides[0]
     assert first["distance_km"] == 46.28
     assert first["normalized_power_w"] == 204.0
@@ -217,7 +217,7 @@ def test_invalid_date_raises_readable_error(monkeypatch: pytest.MonkeyPatch) -> 
 
 def test_weekly_summary_covers_requested_weeks(monkeypatch: pytest.MonkeyPatch) -> None:
     fake = FakeGarminClient([])
-    fake.canned["cycling_activities_by_date"] = load_fixture()
+    fake.canned["cycling_activities_by_date"] = load_fixture()[:2]  # rides within range
     install_fake(monkeypatch, fake)
 
     result = server.get_weekly_training_summary(weeks=2, end_date="2026-07-16")
@@ -233,7 +233,7 @@ def test_plan_context_bundles_all_sections(monkeypatch: pytest.MonkeyPatch) -> N
     fake.canned["cycling_ftp"] = load_json("cycling_ftp.json")
     fake.canned["max_metrics"] = load_json("max_metrics.json")
     fake.canned["training_status"] = load_json("training_status.json")
-    fake.canned["cycling_activities_by_date"] = load_fixture()
+    fake.canned["cycling_activities_by_date"] = load_fixture()[:2]
     fake.canned["sleep_daily"] = load_json("sleep_data.json")
     fake.canned["hrv_daily"] = load_json("hrv_data.json")
     fake.canned["rhr_daily"] = load_json("rhr_day.json")

@@ -240,8 +240,8 @@ export default function Dashboard() {
             <ChartSkeleton height={240} />
           )}
           <p className="mt-2 text-xs text-muted-foreground">
-            *NP is Garmin-reported. Power comes from a single-sided Rally RS100 (left-leg
-            doubled) — treat watts as ±5–10 W.
+            *NP is Garmin-reported. Power is from a dual-sided Rally meter since Jul 24,
+            2026; earlier rides used a single-sided meter (left-leg doubled).
           </p>
         </CardContent>
       </Card>

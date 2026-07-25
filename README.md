@@ -214,8 +214,10 @@ your Tailscale account are the auth boundary.
   `src/garmin_coach/client.py` so breakage is contained to one module.
 - **Rate limits**: Garmin returns HTTP 429 under heavy use; commands fail fast with a
   clear message rather than retrying aggressively.
-- **Single-sided power**: a Garmin Rally RS100 doubles left-leg power. Normalized data
-  carries a `power_note` and no analysis will ever claim left/right balance.
+- **Power meter history**: dual-sided Rally since 2026-07-24 (rides carry real
+  `left/right_balance_pct`); earlier rides used a single-sided RS100 (left-leg
+  doubled) and keep a `power_note` caveat. Detection is per-ride from the data —
+  balance fields present means dual-sided — so history stays honest with no config.
 - Read-only by design in v1: no activity edits, uploads, or workout scheduling.
 
 ## Project layout

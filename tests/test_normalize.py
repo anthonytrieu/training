@@ -49,7 +49,21 @@ def test_sensorless_ride_yields_none_not_guesses() -> None:
 
 def test_normalize_list_preserves_order() -> None:
     rides = normalize_ride_summaries(load_fixture())
-    assert [r.activity_id for r in rides] == [100000001, 100000002]
+    assert [r.activity_id for r in rides] == [100000001, 100000002, 100000003]
+
+
+def test_dual_sided_ride_has_balance_and_no_caveat() -> None:
+    ride = normalize_ride_summaries(load_fixture())[2]
+    assert ride.left_balance_pct == 48.0
+    assert ride.right_balance_pct == 52.0
+    assert ride.power_note is None  # dual-sided: no single-sided caveat
+
+
+def test_single_sided_ride_keeps_caveat_and_no_balance() -> None:
+    ride = normalize_ride_summaries(load_fixture())[0]
+    assert ride.left_balance_pct is None
+    assert ride.right_balance_pct is None
+    assert ride.power_note is not None and "single-sided" in ride.power_note
 
 
 def test_missing_optional_fields_do_not_crash() -> None:

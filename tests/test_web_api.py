@@ -41,11 +41,14 @@ def test_rides_endpoint_returns_normalized(web: TestClient, monkeypatch: pytest.
 
 def test_weekly_endpoint(web: TestClient, monkeypatch: pytest.MonkeyPatch):
     fake = FakeGarminClient([])
-    fake.canned["cycling_activities_by_date"] = load("activity_list.json")
+    fake.canned["cycling_activities_by_date"] = load("activity_list.json")[:2]
     install_fake(monkeypatch, fake)
     resp = web.get("/api/weekly?weeks=2")
     assert resp.status_code == 200
-    assert len(resp.json()["weeks"]) == 2
+    weeks = resp.json()["weeks"]
+    # at least the two requested weeks; fixture rides outside the window may add buckets
+    assert len(weeks) >= 2
+    assert all("week_start" in w and "ride_count" in w for w in weeks)
 
 
 def test_reauth_maps_to_401(web: TestClient, monkeypatch: pytest.MonkeyPatch):

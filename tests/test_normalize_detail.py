@@ -150,7 +150,21 @@ def test_ftp() -> None:
     f = normalize_ftp(load("cycling_ftp.json"))
     assert f["ftp_w"] == 290.0
     assert f["is_stale"] is False
-    assert "single-sided" in f["power_note"]
+    assert "dual-sided since 2026-07-24" in f["power_note"]
+
+
+def test_dual_sided_summary_exposes_balance_without_caveat() -> None:
+    s = normalize_activity_summary(load("activity_summary_dual.json"))
+    assert s["left_balance_pct"] == 48.0
+    assert s["right_balance_pct"] == 52.0
+    assert s["power_note"] is None
+    assert s["garmin_reported_note"] is not None  # IF/TSS provenance note stays
+
+
+def test_single_sided_summary_keeps_caveat() -> None:
+    s = normalize_activity_summary(load("activity_summary.json"))
+    assert s["left_balance_pct"] is None
+    assert "single-sided" in s["power_note"]
 
 
 def test_courses_normalized_longest_first() -> None:

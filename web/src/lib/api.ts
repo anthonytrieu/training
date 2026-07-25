@@ -37,6 +37,8 @@ export interface RideSummary {
   max_power_w: number | null
   normalized_power_w: number | null
   avg_cadence_rpm: number | null
+  left_balance_pct: number | null
+  right_balance_pct: number | null
   calories_kcal: number | null
   training_load: number | null
   power_note: string | null

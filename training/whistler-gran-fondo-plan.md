@@ -22,7 +22,7 @@
 
 **Honest assessment**: your engine (FTP 290, VO2 63.7) is already more than enough to *finish* Whistler comfortably. What's missing is specificity: almost all recent riding is interrupted urban riding — 81% of ride time below 159 W with long stops. The fondo asks the opposite question: can you hold 190–240 W continuously for 4–5 hours with 20–40 minute uninterrupted climbs? The plan is therefore built around **sustained-effort conversion**, not fitness building.
 
-**Data caveats**: Garmin history starts mid-June, so earlier fitness isn't visible here. Power is a single-sided Rally RS100 (left-leg doubled) — treat all watt targets as ±5–10 W. No Garmin watch, so training readiness isn't available; use the morning self-check below instead.
+**Data caveats**: Garmin history starts mid-June, so earlier fitness isn't visible here. Power was a single-sided Rally RS100 (left-leg doubled) — treat watt targets from before Jul 24 as ±5–10 W. **Update Jul 25:** a dual-sided Rally meter is installed as of Jul 24 — watt targets are now direct measurements and L/R balance is recorded. No Garmin watch, so training readiness isn't available; use the morning self-check below instead.
 
 ---
 

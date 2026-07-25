@@ -12,9 +12,11 @@ from typing import Any
 
 SOURCE_GARMIN = "garmin"
 
-# Rally RS100 measures the left leg only and doubles it. Analysis must never
-# infer left/right balance, and small power skew vs. true bilateral power is possible.
+# Meter history: single-sided Rally RS100 (left-leg doubled) until 2026-07-23;
+# dual-sided Rally from 2026-07-24. Detection is per-ride: balance fields present
+# means dual-sided. The note below is attached only to legacy single-sided rides.
 SINGLE_SIDED_POWER_NOTE = "single-sided power meter (left-leg doubled); no L/R balance data"
+DUAL_SIDED_SINCE = "2026-07-24"
 
 
 @dataclass(frozen=True)
@@ -39,6 +41,8 @@ class RideSummary:
     max_power_w: float | None
     normalized_power_w: float | None  # as reported by Garmin, not locally calculated
     avg_cadence_rpm: float | None
+    left_balance_pct: float | None  # dual-sided rides only; None = single-sided era
+    right_balance_pct: float | None
     calories_kcal: float | None
     training_load: float | None  # Garmin's activity training load (unitless)
     aerobic_training_effect: float | None  # Garmin scale 0.0–5.0

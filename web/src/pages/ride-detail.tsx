@@ -69,6 +69,13 @@ export default function RideDetail() {
               <Fact label="Avg HR" value={fmtNum(num("avg_hr_bpm"))} unit="bpm" />
               <Fact label="Max HR" value={fmtNum(num("max_hr_bpm"))} unit="bpm" />
               <Fact label="Load" value={fmtNum(num("training_load"))} />
+              {num("left_balance_pct") != null && (
+                <Fact
+                  label="L/R balance"
+                  value={`${fmtNum(num("left_balance_pct"))} / ${fmtNum(num("right_balance_pct"))}`}
+                  unit="%"
+                />
+              )}
             </div>
           ) : (
             <ChartSkeleton height={90} />

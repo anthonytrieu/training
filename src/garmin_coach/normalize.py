@@ -10,7 +10,7 @@ from __future__ import annotations
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
 
-from .models import SINGLE_SIDED_POWER_NOTE, SOURCE_GARMIN, RideSummary
+from .models import DUAL_SIDED_SINCE, SINGLE_SIDED_POWER_NOTE, SOURCE_GARMIN, RideSummary
 
 
 def _num(raw: dict[str, Any], *keys: str) -> float | None:
@@ -44,6 +44,7 @@ def normalize_ride_summary(raw: dict[str, Any]) -> RideSummary:
 
     distance_m = _num(raw, "distance")
     avg_power = _num(raw, "avgPower", "averagePower")
+    left_balance = _num(raw, "avgLeftBalance")
 
     return RideSummary(
         activity_id=int(raw["activityId"]),
@@ -66,11 +67,17 @@ def normalize_ride_summary(raw: dict[str, Any]) -> RideSummary:
         avg_cadence_rpm=_round(
             _num(raw, "averageBikingCadenceInRevPerMinute", "avgBikeCadence", "averageCadence")
         ),
+        left_balance_pct=_round(left_balance),
+        right_balance_pct=_round(None if left_balance is None else 100 - left_balance),
         calories_kcal=_round(_num(raw, "calories"), 0),
         training_load=_round(_num(raw, "activityTrainingLoad")),
         aerobic_training_effect=_round(_num(raw, "aerobicTrainingEffect")),
         anaerobic_training_effect=_round(_num(raw, "anaerobicTrainingEffect")),
-        power_note=SINGLE_SIDED_POWER_NOTE if avg_power is not None else None,
+        # Balance present = dual-sided meter; power without balance = the legacy
+        # single-sided era (pre 2026-07-24), which keeps its caveat.
+        power_note=(
+            SINGLE_SIDED_POWER_NOTE if avg_power is not None and left_balance is None else None
+        ),
     )
 
 
@@ -102,6 +109,7 @@ def normalize_activity_summary(raw: dict[str, Any]) -> dict[str, Any]:
     type_dto = raw.get("activityTypeDTO") or {}
     distance_m = _num(dto, "distance")
     avg_power = _num(dto, "averagePower")
+    left_balance = _num(dto, "leftBalance")
 
     return {
         "activity_id": raw.get("activityId"),
@@ -131,6 +139,8 @@ def normalize_activity_summary(raw: dict[str, Any]) -> dict[str, Any]:
         "training_stress_score": _round(_num(dto, "trainingStressScore")),
         "avg_cadence_rpm": _round(_num(dto, "averageBikeCadence")),
         "max_cadence_rpm": _round(_num(dto, "maxBikeCadence")),
+        "left_balance_pct": _round(left_balance),
+        "right_balance_pct": _round(_num(dto, "rightBalance")),
         "calories_kcal": _round(_num(dto, "calories"), 0),
         "training_load": _round(_num(dto, "activityTrainingLoad")),
         "aerobic_training_effect": _round(_num(dto, "trainingEffect")),
@@ -141,7 +151,9 @@ def normalize_activity_summary(raw: dict[str, Any]) -> dict[str, Any]:
         "end_stamina_pct": _round(_num(dto, "endPotentialStamina")),
         "min_stamina_pct": _round(_num(dto, "minAvailableStamina")),
         "source": SOURCE_GARMIN,
-        "power_note": SINGLE_SIDED_POWER_NOTE if avg_power is not None else None,
+        "power_note": (
+            SINGLE_SIDED_POWER_NOTE if avg_power is not None and left_balance is None else None
+        ),
         "garmin_reported_note": GARMIN_REPORTED_NOTE if avg_power is not None else None,
     }
 
@@ -438,7 +450,10 @@ def normalize_ftp(raw: dict[str, Any]) -> dict[str, Any]:
         "is_stale": raw.get("isStale"),
         "source_type": raw.get("biometricSourceType"),
         "source": SOURCE_GARMIN,
-        "power_note": SINGLE_SIDED_POWER_NOTE,
+        "power_note": (
+            f"power meter is dual-sided since {DUAL_SIDED_SINCE}; "
+            "earlier rides used a single-sided (left-doubled) meter"
+        ),
     }
 
 
