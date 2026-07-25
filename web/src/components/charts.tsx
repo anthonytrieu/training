@@ -172,7 +172,7 @@ export function BalanceTrend({ rides }: { rides: RideSummary[] }) {
   if (data.length < 2) return null
   return (
     <ResponsiveContainer width="100%" height={180}>
-      <LineChart data={data} margin={{ top: 8, right: 4, left: -14, bottom: 0 }}>
+      <LineChart data={data} margin={{ top: 8, right: 8, left: -4, bottom: 0 }}>
         <CartesianGrid vertical={false} stroke={GRID} />
         <XAxis dataKey="date" tick={AXIS} axisLine={{ stroke: GRID }} tickLine={false} minTickGap={30} />
         <YAxis domain={[42, 58]} tick={AXIS} axisLine={false} tickLine={false} width={40} tickFormatter={(v) => `${v}%`} />
