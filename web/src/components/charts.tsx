@@ -7,12 +7,14 @@ import {
   CartesianGrid,
   Line,
   LineChart,
+  ReferenceArea,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts"
-import type { WeekSummary, ZoneBucket } from "@/lib/api"
+import type { RideSummary, WeekSummary, ZoneBucket } from "@/lib/api"
 import { fmtDate, fmtDuration, fmtNum } from "@/lib/format"
 
 const AXIS = { fontSize: 11, fill: "var(--viz-axis)" }
@@ -152,6 +154,58 @@ export function Sparkline({
           )}
         />
         <Line type="monotone" dataKey="y" stroke={color} strokeWidth={2} dot={false} isAnimationActive={false} />
+      </LineChart>
+    </ResponsiveContainer>
+  )
+}
+
+export function BalanceTrend({ rides }: { rides: RideSummary[] }) {
+  // Oldest → newest, dual-sided rides only.
+  const data = rides
+    .filter((r) => r.left_balance_pct != null)
+    .reverse()
+    .map((r) => ({
+      date: fmtDate(r.start_time_local),
+      left: r.left_balance_pct as number,
+      right: r.right_balance_pct as number,
+    }))
+  if (data.length < 2) return null
+  return (
+    <ResponsiveContainer width="100%" height={180}>
+      <LineChart data={data} margin={{ top: 8, right: 4, left: -14, bottom: 0 }}>
+        <CartesianGrid vertical={false} stroke={GRID} />
+        <XAxis dataKey="date" tick={AXIS} axisLine={{ stroke: GRID }} tickLine={false} minTickGap={30} />
+        <YAxis domain={[42, 58]} tick={AXIS} axisLine={false} tickLine={false} width={40} tickFormatter={(v) => `${v}%`} />
+        {/* 48-52% is the normal band */}
+        <ReferenceArea y1={48} y2={52} fill="var(--viz-grid)" fillOpacity={0.45} stroke="none" />
+        <ReferenceLine y={50} stroke="var(--viz-axis)" strokeDasharray="4 3" />
+        <Tooltip
+          content={({ active, payload, label }) => (
+            <VizTooltip
+              active={active}
+              label={label}
+              rows={
+                payload?.length
+                  ? [
+                      {
+                        name: "L / R",
+                        value: `${fmtNum(payload[0].payload.left, 1)} / ${fmtNum(payload[0].payload.right, 1)} %`,
+                        color: "var(--viz-power)",
+                      },
+                    ]
+                  : []
+              }
+            />
+          )}
+        />
+        <Line
+          type="monotone"
+          dataKey="left"
+          stroke="var(--viz-power)"
+          strokeWidth={2}
+          dot={{ r: 4, fill: "var(--viz-power)", strokeWidth: 0 }}
+          isAnimationActive={false}
+        />
       </LineChart>
     </ResponsiveContainer>
   )

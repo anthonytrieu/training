@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Sparkline, WeeklyBars } from "@/components/charts"
+import { BalanceTrend, Sparkline, WeeklyBars } from "@/components/charts"
 import { ChartSkeleton, ErrorNote, useApi } from "@/components/data-state"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -51,7 +51,7 @@ export default function Dashboard() {
   const status = useApi(() => api.status())
   const weekly = useApi(() => api.weekly(8))
   const wellness = useApi(() => api.wellness(7))
-  const rides = useApi(() => api.rides(8))
+  const rides = useApi(() => api.rides(30))
 
   const anyAuthError = [status, weekly, wellness, rides].find(
     (q) => q.error,
@@ -181,6 +181,24 @@ export default function Dashboard() {
         ) : null}
       </div>
 
+      {/* L/R balance trend (dual-sided rides only) */}
+      {rides.data && rides.data.filter((r) => r.left_balance_pct != null).length >= 2 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm">
+              Left-leg share of power — dual-sided rides
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <BalanceTrend rides={rides.data} />
+            <p className="mt-1 text-xs text-muted-foreground">
+              Shaded band = normal 48–52%. Day-to-day wobble is noise; only a persistent
+              drift outside the band is worth a look.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Recent rides */}
       <Card>
         <CardHeader>
@@ -201,7 +219,7 @@ export default function Dashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {rides.data.map((r) => (
+                {rides.data.slice(0, 8).map((r) => (
                   <TableRow key={r.activity_id}>
                     <TableCell>
                       <Link
